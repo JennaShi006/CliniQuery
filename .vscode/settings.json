@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "string": "cpp",
+        "iostream": "cpp"
+    },
+    "cmake.sourceDirectory": "C:/Users/haora/CliniQuery/cpp_backend"
+}
