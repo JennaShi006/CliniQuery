@@ -14,7 +14,8 @@ public:
     bool isEndOfSymp = false;
 
     TrieSympNode();
-  
+    ~TrieSympNode();
+
 };
 
 
@@ -23,9 +24,11 @@ class TrieSymp {
     TrieSympNode* root;
 
 public:
-   TrieSymp();
+    TrieSymp();
     void insert(const string& symptom, const string& patient);
-    unordered_set<string>_search(const string& symptom);
+    unordered_set<string> search(const string& symptom);
+    void printPatients(const string& symptom);
+    ~TrieSymp();
 };
 
 // class Trie {

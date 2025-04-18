@@ -22,6 +22,12 @@ public:
 };
 
 class TrieName {
+    vector<string> symptomsList = {
+        "Fever", "Chest pains", "Abdominal pain", "Cough", "Fatigue", "Nausea",
+        "Bleeding", "Seizures", "Dizziness", "Headaches", "Shortness of breath",
+        "Memory loss", "Swelling", "Diarrhea", "Constipation", "Joint pain"
+    };
+
     public:
         TrieNode* root;
     
@@ -42,9 +48,9 @@ class TrieName {
     
         void insert(const string& name, const string& symptoms);
     
-        bool search(const std::string& word);
+        unordered_set<string> search(const std::string& name);
     
         bool startsWith(const std::string& prefix);
-        void printPatients(const std::string& name);
+        void printSymptoms(const string& name);
     };
 

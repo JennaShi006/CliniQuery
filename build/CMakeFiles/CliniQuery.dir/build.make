@@ -99,21 +99,53 @@ CMakeFiles/CliniQuery.dir/src/trieName.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/CliniQuery.dir/src/trieName.cpp.s"
 	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\haora\CliniQuery\cpp_backend\src\trieName.cpp -o CMakeFiles\CliniQuery.dir\src\trieName.cpp.s
 
+CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.obj: CMakeFiles/CliniQuery.dir/flags.make
+CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.obj: C:/Users/haora/CliniQuery/cpp_backend/src/trieSymp.cpp
+CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.obj: CMakeFiles/CliniQuery.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\haora\CliniQuery\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.obj"
+	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.obj -MF CMakeFiles\CliniQuery.dir\src\trieSymp.cpp.obj.d -o CMakeFiles\CliniQuery.dir\src\trieSymp.cpp.obj -c C:\Users\haora\CliniQuery\cpp_backend\src\trieSymp.cpp
+
+CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.i"
+	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\haora\CliniQuery\cpp_backend\src\trieSymp.cpp > CMakeFiles\CliniQuery.dir\src\trieSymp.cpp.i
+
+CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.s"
+	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\haora\CliniQuery\cpp_backend\src\trieSymp.cpp -o CMakeFiles\CliniQuery.dir\src\trieSymp.cpp.s
+
+CMakeFiles/CliniQuery.dir/src/bplus.cpp.obj: CMakeFiles/CliniQuery.dir/flags.make
+CMakeFiles/CliniQuery.dir/src/bplus.cpp.obj: C:/Users/haora/CliniQuery/cpp_backend/src/bplus.cpp
+CMakeFiles/CliniQuery.dir/src/bplus.cpp.obj: CMakeFiles/CliniQuery.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\haora\CliniQuery\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/CliniQuery.dir/src/bplus.cpp.obj"
+	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CliniQuery.dir/src/bplus.cpp.obj -MF CMakeFiles\CliniQuery.dir\src\bplus.cpp.obj.d -o CMakeFiles\CliniQuery.dir\src\bplus.cpp.obj -c C:\Users\haora\CliniQuery\cpp_backend\src\bplus.cpp
+
+CMakeFiles/CliniQuery.dir/src/bplus.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/CliniQuery.dir/src/bplus.cpp.i"
+	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\haora\CliniQuery\cpp_backend\src\bplus.cpp > CMakeFiles\CliniQuery.dir\src\bplus.cpp.i
+
+CMakeFiles/CliniQuery.dir/src/bplus.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/CliniQuery.dir/src/bplus.cpp.s"
+	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\haora\CliniQuery\cpp_backend\src\bplus.cpp -o CMakeFiles\CliniQuery.dir\src\bplus.cpp.s
+
 # Object files for target CliniQuery
 CliniQuery_OBJECTS = \
 "CMakeFiles/CliniQuery.dir/src/main.cpp.obj" \
-"CMakeFiles/CliniQuery.dir/src/trieName.cpp.obj"
+"CMakeFiles/CliniQuery.dir/src/trieName.cpp.obj" \
+"CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.obj" \
+"CMakeFiles/CliniQuery.dir/src/bplus.cpp.obj"
 
 # External object files for target CliniQuery
 CliniQuery_EXTERNAL_OBJECTS =
 
 CliniQuery.exe: CMakeFiles/CliniQuery.dir/src/main.cpp.obj
 CliniQuery.exe: CMakeFiles/CliniQuery.dir/src/trieName.cpp.obj
+CliniQuery.exe: CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.obj
+CliniQuery.exe: CMakeFiles/CliniQuery.dir/src/bplus.cpp.obj
 CliniQuery.exe: CMakeFiles/CliniQuery.dir/build.make
 CliniQuery.exe: CMakeFiles/CliniQuery.dir/linkLibs.rsp
 CliniQuery.exe: CMakeFiles/CliniQuery.dir/objects1.rsp
 CliniQuery.exe: CMakeFiles/CliniQuery.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\haora\CliniQuery\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable CliniQuery.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\haora\CliniQuery\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable CliniQuery.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\CliniQuery.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

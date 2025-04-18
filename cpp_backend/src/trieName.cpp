@@ -37,20 +37,20 @@ void TrieName::insert(const std::string& name, const std::string& symptoms) {
     current->symptoms.insert(symptoms);
 }
 
-bool TrieName::search(const std::string& word) {
+unordered_set<string> TrieName::search(const std::string& name) {
     // Normalize the input: convert to lowercase
-    std::string normalizedWord = word;
+    std::string normalizedWord = name;
     std::transform(normalizedWord.begin(), normalizedWord.end(), normalizedWord.begin(), ::tolower);
 
     TrieNode* current = root;
     for (char c : normalizedWord) {
         if (current->children.find(c) == current->children.end()) {
             // If the character is not present, return false
-            return false;
+            return {};
         }
         current = current->children[c];
     }
-    return current->isEndOfWord;
+    return current->symptoms; // Return the symptoms associated with the name
 }
 
 bool TrieName::startsWith(const std::string& prefix) {
@@ -69,19 +69,26 @@ bool TrieName::startsWith(const std::string& prefix) {
     return true;
 }
 
-void TrieName::printPatients(const std::string& name){
+void TrieName::printSymptoms(const string& name) {
+    // Normalize the input: convert to lowercase
     std::string normalizedName = name;
     std::transform(normalizedName.begin(), normalizedName.end(), normalizedName.begin(), ::tolower);
-    TrieNode* current = root;
-    for (char c : normalizedName) {
-        if (current->children.find(c) == current->children.end()) {
-            // If the character is not present, return false
-            std::cout << "No patients found with the name: " << name << std::endl;
-            return;
-        }
-        current = current->children[c];
+
+    unordered_set<string> symptoms = search(normalizedName);
+    if (symptoms.empty()) {
+        std::cout << "No symptoms found for the name: " << name << std::endl;
+        return;
     }
-    for (const auto& symptom : current->symptoms) {
-        std::cout << "Patient: " << current->name << ", Symptoms: " << symptom << std::endl;
+
+    for (const auto& symptom : symptoms) {
+        std::cout << "Patient: " << name << ", Symptoms: ";
+        //symptom << std::endl;
+        for (int i=0; i<symptom.length(); i++){
+            if(symptom[i] == '1'){
+                std::cout << symptomsList[i] << " | ";
+            }
+            
+        }
+        std::cout << std::endl;
     }
 }
