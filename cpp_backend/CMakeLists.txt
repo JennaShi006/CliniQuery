@@ -3,4 +3,4 @@ project(CliniQuery)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(CliniQuery src/main.cpp src/trieName.cpp)
+add_executable(CliniQuery src/main.cpp src/trieName.cpp src/trieSymp.cpp src/bplus.cpp)

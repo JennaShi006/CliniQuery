@@ -84,12 +84,12 @@ clean: CMakeFiles/CliniQuery.dir/clean
 CMakeFiles/CliniQuery.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\CliniQuery.dir\build.make CMakeFiles/CliniQuery.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\CliniQuery.dir\build.make CMakeFiles/CliniQuery.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\haora\CliniQuery\build\CMakeFiles --progress-num=1,2,3 "Built target CliniQuery"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\haora\CliniQuery\build\CMakeFiles --progress-num=1,2,3,4,5 "Built target CliniQuery"
 .PHONY : CMakeFiles/CliniQuery.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/CliniQuery.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\haora\CliniQuery\build\CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\haora\CliniQuery\build\CMakeFiles 5
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/CliniQuery.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\haora\CliniQuery\build\CMakeFiles 0
 .PHONY : CMakeFiles/CliniQuery.dir/rule

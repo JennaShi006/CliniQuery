@@ -1,7 +1,6 @@
 #include "trieSymp.h"
 #include <cctype>
 
-// -------- TrieNode Implementation --------
 
 TrieSympNode::TrieSympNode() {
     isEndOfSymp = false;
@@ -13,19 +12,11 @@ TrieSympNode::~TrieSympNode() {
     }
 }
 
-// -------- SymptomTrie Implementation --------
 
 TrieSymp::TrieSymp() {
     root = new TrieSympNode();
 }
 
-
-// void TrieSymp::deleteTrie(TrieSympNode* node) {
-//     for (auto& pair : node->children) {
-//         deleteTrie(pair.second);
-//     }
-//     delete node;
-// }
 
 void TrieSymp::insert(const string& symptom, const string& patient) {
     TrieSympNode* node = root;
@@ -40,38 +31,29 @@ void TrieSymp::insert(const string& symptom, const string& patient) {
     node->names.insert(patient);
 }
 
-// std::unordered_set<std::string> SymptomTrie::getPatientsBySymptom(const std::string& symptom) {
-//     TrieSympNode* node = root;
-//     for (char c : symptom) {
-//         char lower = std::tolower(c);
-//         if (node->children.find(lower) == node->children.end()) {
-//             return {};
-//         }
-//         node = node->children[lower];
-//     }
-//     return node->isEndOfSymp ? node->patients : std::unordered_set<std::string>();
-// }
+unordered_set<string> TrieSymp::search(const string& symptom) {
+    TrieSympNode* node = root;
+    for (char c : symptom) {
+        char lower = std::tolower(c);
+        if (node->children.find(lower) == node->children.end()) {
+            return {};
+        }
+        node = node->children[lower];
+    }
+    if (node->isEndOfSymp) {
+        return node->names;
+    } else {
+        return unordered_set<string>();
+    }
+}
 
-// void TrieSymp::dfs(TrieSympNode* node, std::unordered_set<std::string>& result) {
-//     if (node->isEndOfSymp) {
-//         result.insert(node->patients.begin(), node->patients.end());
-//     }
-//     for (auto& pair : node->children) {
-//         dfs(pair.second, result);
-//     }
-// }
+void TrieSymp::printPatients(const string& symptom){
+    unordered_set<string> names = search(symptom);
+    for(string s: names){
+        cout<<s<<" | ";
+    }
+}
 
-// std::unordered_set<std::string> SymptomTrie::getPatientsBySymptomPrefix(const std::string& prefix) {
-//     TrieNode* node = root;
-//     for (char c : prefix) {
-//         char lower = std::tolower(c);
-//         if (node->children.find(lower) == node->children.end()) {
-//             return {};
-//         }
-//         node = node->children[lower];
-//     }
-
-//     std::unordered_set<std::string> result;
-//     dfs(node, result);
-//     return result;
-//}
+TrieSymp::~TrieSymp(){
+    delete root;
+}

@@ -128,6 +128,30 @@ CliniQuery/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\CliniQuery.dir\build.make CMakeFiles/CliniQuery.dir/build
 .PHONY : CliniQuery/fast
 
+src/bplus.obj: src/bplus.cpp.obj
+.PHONY : src/bplus.obj
+
+# target to build an object file
+src/bplus.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\CliniQuery.dir\build.make CMakeFiles/CliniQuery.dir/src/bplus.cpp.obj
+.PHONY : src/bplus.cpp.obj
+
+src/bplus.i: src/bplus.cpp.i
+.PHONY : src/bplus.i
+
+# target to preprocess a source file
+src/bplus.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\CliniQuery.dir\build.make CMakeFiles/CliniQuery.dir/src/bplus.cpp.i
+.PHONY : src/bplus.cpp.i
+
+src/bplus.s: src/bplus.cpp.s
+.PHONY : src/bplus.s
+
+# target to generate assembly for a file
+src/bplus.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\CliniQuery.dir\build.make CMakeFiles/CliniQuery.dir/src/bplus.cpp.s
+.PHONY : src/bplus.cpp.s
+
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
 
@@ -176,6 +200,30 @@ src/trieName.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\CliniQuery.dir\build.make CMakeFiles/CliniQuery.dir/src/trieName.cpp.s
 .PHONY : src/trieName.cpp.s
 
+src/trieSymp.obj: src/trieSymp.cpp.obj
+.PHONY : src/trieSymp.obj
+
+# target to build an object file
+src/trieSymp.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\CliniQuery.dir\build.make CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.obj
+.PHONY : src/trieSymp.cpp.obj
+
+src/trieSymp.i: src/trieSymp.cpp.i
+.PHONY : src/trieSymp.i
+
+# target to preprocess a source file
+src/trieSymp.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\CliniQuery.dir\build.make CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.i
+.PHONY : src/trieSymp.cpp.i
+
+src/trieSymp.s: src/trieSymp.cpp.s
+.PHONY : src/trieSymp.s
+
+# target to generate assembly for a file
+src/trieSymp.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\CliniQuery.dir\build.make CMakeFiles/CliniQuery.dir/src/trieSymp.cpp.s
+.PHONY : src/trieSymp.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -185,12 +233,18 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... CliniQuery
+	@echo ... src/bplus.obj
+	@echo ... src/bplus.i
+	@echo ... src/bplus.s
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
 	@echo ... src/trieName.obj
 	@echo ... src/trieName.i
 	@echo ... src/trieName.s
+	@echo ... src/trieSymp.obj
+	@echo ... src/trieSymp.i
+	@echo ... src/trieSymp.s
 .PHONY : help
 
 
