@@ -14,7 +14,7 @@ class BPlus{
     
     // Large order for smaller height / shallower tree allowing for more efficient search
     // At most 100 children and 99 keys for non-leaf nodes, 99 keys for leaf node
-    int order = 100;
+    const static int order = 100;
 
     struct Node {
         bool isLeaf = false;
@@ -167,7 +167,7 @@ class BPlus{
         newLeaf->prev = leaf;
 
         // Insert the promoted key into the parent
-        insertInParent(leaf, promote, newLeaf);
+        insertInParent(leaf, newLeaf, promote);
     }
 
     // Split an internal node
@@ -198,7 +198,7 @@ class BPlus{
         node->keyCount = split;
 
         // Insert the promoted key into the parent
-        insertInParent(node, promote, newNode);
+        insertInParent(node, newNode, promote);
     }
 
     // Helper to insert a key (and potentially a new child) into a parent node
@@ -249,9 +249,9 @@ class BPlus{
 
     public:
 
-    BPlusTree() = default;
+    BPlus() = default;
 
-    ~BPlusTree() {
+    ~BPlus() {
         destroyTree(root);
         delete root;
         delete head;
