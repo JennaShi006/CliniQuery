@@ -25,10 +25,19 @@ class TrieName {
     public:
         TrieNode* root;
     
-        TrieName() : root(new TrieNode()) {}
+        TrieName() {
+            root = new TrieNode();
+        }
     
         ~TrieName() {
-            delete root;
+            deleteTrie(root);
+        }
+        void deleteTrie(TrieNode* node) {
+            if (!node) return;
+            for (auto& pair : node->children) {
+                deleteTrie(pair.second);
+            }
+            delete node;
         }
     
         void insert(const string& name, const string& symptoms);
@@ -36,5 +45,6 @@ class TrieName {
         bool search(const std::string& word);
     
         bool startsWith(const std::string& prefix);
+        void printPatients(const std::string& name);
     };
 
