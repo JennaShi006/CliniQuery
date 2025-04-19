@@ -7,6 +7,8 @@
 #include <vector>
 #define CROW_USE_ASIO   // tells Crow to use standalone ASIO
 #include "crow.h"
+#include "json.hpp"
+
 
 
 using namespace std;
@@ -41,8 +43,11 @@ void insertData(TrieName& trieName, TrieSymp& symp, const auto& line) {
 
 int main() {
     crow::SimpleApp app;
-    CROW_ROUTE(app, "/")([](){
-        return "Crow is working!";
+    CROW_ROUTE(app, "/api/data")([](){
+        nlohmann::json data = {
+            {{"name", "Example"}, {"value", 42}}
+        };
+        return crow::json::wvalue(crow::json::rvalue(data));
     });
 
     app.port(18080).multithreaded().run();
@@ -103,10 +108,28 @@ int main() {
     // bPlusTree.insert("derek", "0000000100000001");
     // bPlusTree.insert("tanvi", "0000010100010001");
 
-    // vector<pair<string, string>> results = bPlusTree.searchResults("josh");
+    // vector<pair<string, string>> nameResults = bPlusTree.searchName("derrick");
 
-    // for (int i=0; i<results.size(); i++) {
-    //     cout << "Name: " << results[i].first << ", Symptoms: " << results[i].second << endl;
+    // cout<<"Searching by name:"<<endl;
+
+    // for (int i=0; i<min(50,(int)nameResults.size()); i++) {
+    //     cout << "Name: " << nameResults[i].first << ", Symptoms: " << nameResults[i].second << endl;
+    // }
+
+    // BPlus symptomTree;
+    // symptomTree.insert("1000000000000000", "josh k");
+    // symptomTree.insert("1000000000000001", "john");
+    // symptomTree.insert("1000000000001111", "josh l");
+    // symptomTree.insert("0000000000000001", "josh p");
+    // symptomTree.insert("0000000000000011", "jenna");
+    // symptomTree.insert("0000000100001011", "jacob");
+
+    // vector<pair<string, string>> sympResults = symptomTree.searchSymp("0000000000001000");
+
+    // cout<<endl<<"Searching by symptom:"<<endl;
+
+    // for (int i=0; i<min(50,(int)sympResults.size()); i++) {
+    //     cout << "Name: " << sympResults[i].second << ", Symptoms: " << sympResults[i].first << endl;
     // }
 
 

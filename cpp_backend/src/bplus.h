@@ -103,8 +103,11 @@ class BPlus{
     pair<Leaf*, int> search(const string& key);
 
 
-    // Search for a key and return the closest 50 results' key-value pairs
-    vector<pair<string,string>> searchResults(const string& key);
+    // Search for a name and return the closest results' key-value pairs
+    vector<pair<string,string>> searchName(const string& key);
+
+    // Search for a symptom and return the closest results' key-value pairs
+    vector<pair<string,string>> searchSymp(const string& key);
 
 };
 

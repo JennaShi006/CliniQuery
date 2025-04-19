@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(external/crow/include)
 
 # Add nlohmann/json (if using a local copy)
-include_directories(${CMAKE_SOURCE_DIR}/include/json)
+include_directories(include)
 
 # Add asio
 include_directories(external/asio/include)
