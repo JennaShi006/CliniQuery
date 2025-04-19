@@ -272,6 +272,7 @@ vector<pair<string,string>> BPlus::searchName(const string& key) {
                         right = 0;
                     }
                     // If rightLeaf became nullptr, the outer `if (rightLeaf != nullptr)` will fail next time
+                    continue;
                 }
             }
 
