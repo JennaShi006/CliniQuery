@@ -240,20 +240,19 @@ pair<BPlus::Leaf*, int> BPlus::search(const string& key) {
     return result;
 }
 
-// Search for a key and return the closest 50 results' key-value pairs
-vector<pair<string,string>> BPlus::searchResults(const string& key) {
+// Search for a name and return the closest results' key-value pairs
+vector<pair<string,string>> BPlus::searchName(const string& key) {
     vector<pair<string,string>> results;
     pair<Leaf*, int> topResult = search(key);
     if (topResult.first != nullptr) {
         results.push_back({topResult.first->keys[topResult.second], topResult.first->values[topResult.second]});
-        int count = 1;
         int left = topResult.second - 1;
         int right = topResult.second + 1;
         Leaf* leftLeaf = topResult.first;
         Leaf* rightLeaf = topResult.first;
 
-        // Add the top result and the 50 closest results
-        while (count < 50){
+        // Add the top result and the closest results in descending order
+        while (leftLeaf != nullptr || rightLeaf != nullptr){
 
             // Try adding from the right
             if (rightLeaf != nullptr) {
@@ -261,7 +260,10 @@ vector<pair<string,string>> BPlus::searchResults(const string& key) {
                     // Valid index in current rightLeaf
                     results.push_back({rightLeaf->keys[right], rightLeaf->values[right]});
                     right++;
-                    count++;
+                    // Keep going for same first name
+                    if (rightLeaf->keys[right].substr(0, key.size())==key) {
+                        continue;
+                    }
                 } else {
                     // Index is out of bounds, move to the next leaf
                     rightLeaf = rightLeaf->next;
@@ -271,7 +273,6 @@ vector<pair<string,string>> BPlus::searchResults(const string& key) {
                     }
                     // If rightLeaf became nullptr, the outer `if (rightLeaf != nullptr)` will fail next time
                 }
-                continue;
             }
 
             if (leftLeaf != nullptr) {
@@ -279,10 +280,6 @@ vector<pair<string,string>> BPlus::searchResults(const string& key) {
                     // Valid index in current leftLeaf
                     results.push_back({leftLeaf->keys[left], leftLeaf->values[left]});
                     left--;
-                    count++;
-                    if (count >= 50) {
-                        break; // Exit early if goal reached
-                    }
                 } else {
                     // Index is out of bounds, move to the previous leaf
                     leftLeaf = leftLeaf->prev;
@@ -294,13 +291,67 @@ vector<pair<string,string>> BPlus::searchResults(const string& key) {
                 }
             }
 
-            // Termination condition: If both directions are exhausted
-            if (leftLeaf == nullptr && rightLeaf == nullptr) {
-                break;
+        }
+    }
+    return results;
+}
+
+// Search for a symptom and return the closest results' key-value pairs
+vector<pair<string,string>> BPlus::searchSymp(const string& key) {
+    int symp = key.find("1");
+    vector<pair<string,string>> results;
+    pair<Leaf*, int> topResult = search(key);
+    if (topResult.first != nullptr) {
+        results.push_back({topResult.first->keys[topResult.second], topResult.first->values[topResult.second]});
+        int left = topResult.second - 1;
+        int right = topResult.second + 1;
+        Leaf* leftLeaf = topResult.first;
+        Leaf* rightLeaf = topResult.first;
+
+        // Add the top result and the closest results in descending order
+        while (leftLeaf != nullptr || rightLeaf != nullptr){
+            // Try adding from the right
+            if (rightLeaf != nullptr) {
+                if (right < rightLeaf->keyCount) {
+                    // Valid index in current rightLeaf and has matching symptom
+                    if (rightLeaf->keys[right].substr(symp,1) == "1") {
+                        results.push_back({rightLeaf->keys[right], rightLeaf->values[right]});
+                    }
+                    right++;
+                    // Keep going for same symptom bitstring that matches exactly
+                    if (rightLeaf->keys[right-1]==key) {
+                        continue;
+                    }
+                } else {
+                    // Index is out of bounds, move to the next leaf
+                    rightLeaf = rightLeaf->next;
+                    if (rightLeaf != nullptr) {
+                        // Reset index to the start of the new next leaf
+                        right = 0;
+                    }
+                    // If rightLeaf became nullptr, the outer `if (rightLeaf != nullptr)` will fail next time
+                }
+            }
+
+            if (leftLeaf != nullptr) {
+                if (left >= 0) {
+                    // Valid index in current leftLeaf and has matching symptom
+                    if (leftLeaf->keys[left].substr(symp,1) == "1") {
+                        results.push_back({leftLeaf->keys[left], leftLeaf->values[left]});
+                    }
+                    left--;
+                } else {
+                    // Index is out of bounds, move to the previous leaf
+                    leftLeaf = leftLeaf->prev;
+                    if (leftLeaf != nullptr) {
+                        // Reset index to the end of the new previous leaf
+                        left = leftLeaf->keyCount - 1;
+                    }
+                    // If leftLeaf became nullptr, the outer `if (leftLeaf != nullptr)` will fail next time
+                }
             }
 
         }
     }
     return results;
 }
-

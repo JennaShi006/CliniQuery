@@ -1,3 +1,0 @@
-C:/Users/tanvi/Desktop/UF/COP3530/CliniQuery/cpp_backend/build/CMakeFiles/CliniQuery.dir
-C:/Users/tanvi/Desktop/UF/COP3530/CliniQuery/cpp_backend/build/CMakeFiles/edit_cache.dir
-C:/Users/tanvi/Desktop/UF/COP3530/CliniQuery/cpp_backend/build/CMakeFiles/rebuild_cache.dir

@@ -1,5 +1,6 @@
 import './App.css';
 import Header from './Header';
+import { HomePage } from './Pages/HomePage';
 
 function App() {
   const handleNameChange = () => {
@@ -12,6 +13,7 @@ function App() {
   return (
     <div className="App">
       <Header/>
+      <HomePage />
     </div>
   );
 }

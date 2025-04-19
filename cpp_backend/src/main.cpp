@@ -5,6 +5,11 @@
 #include "trieName.h"
 #include "trieSymp.h"
 #include <vector>
+#define CROW_USE_ASIO   // tells Crow to use standalone ASIO
+#define CROW_ENABLE_MIDDLEWARE
+#include "crow.h"
+#include "json.hpp"
+
 
 
 using namespace std;
@@ -38,6 +43,7 @@ void insertData(TrieName& trieName, TrieSymp& symp, const auto& line) {
 
 
 int main() {
+    // Initialize the trie for names and symptoms
     TrieName trie;
     TrieSymp symp;
     // Open the CSV file
@@ -52,28 +58,87 @@ int main() {
 
     // Read each line from the CSV
     while (getline(file, line)) {
-        // stringstream ss(line);
-        // string fullName, symptomData;
-
-        // // Read the full name (first column)
-        // getline(ss, fullName, ',');
-
-        // // Read the rest of the symptom data (remaining columns)
-        // string symptomsBinary;
-        // while (getline(ss, symptomData, ',')) {
-        //     symptomsBinary += symptomData;
-        // }
-
-        // // Insert the full name and symptoms into the trie
-        // trie.insert(fullName, symptomsBinary);
         insertData(trie, symp, line);
     }
 
     file.close();
 
+    crow::SimpleApp app;
+    ///api/data is just an endpoint to test the server
+    CROW_ROUTE(app, "/api/data")([](){
+        crow::response res;
+
+        //set CORS headers
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+
+        //res.body is the data to be sent back to the front end
+        res.body = R"([{"name":"Josh Miles","symptoms":"0000000000000000"},{"name":"Jenna Shi","symptoms":"1000000000000000"},{"name":"Michael","symptoms":"0100000000000000"},{"name":"Tanvi","symptoms":"1100000000100000"},{"name":"Jerry","symptoms":"0011000000110000"},{"name":"Derrick","symptoms":"0011100000111111"},{"name":"Jacob","symptoms":"1111111111111111"}])";
+        res.code = 200; // HTTP status code 200 OK
+        return res;
+    });
+    
+    //This doesn't work yet; this gets the data that is sent back from the frontend
+    CROW_ROUTE(app, "/api/data").methods("OPTIONS"_method, "POST"_method)([](const crow::request& req, crow::response& res) {
+        if (req.method == "OPTIONS"_method) {
+            res.set_header("Access-Control-Allow-Origin", "*");
+            res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            res.set_header("Access-Control-Allow-Headers", "Content-Type");
+            res.code = 204; // No Content
+            res.end();
+            return;
+        }
+
+        try {
+            auto jsonData = crow::json::load(req.body);
+            if (!jsonData || !jsonData.has("name") || !jsonData.has("symptoms")) {
+                res.code = 400;
+                res.body = "Invalid JSON structure";
+                return;
+            }
+
+            std::string name = jsonData["name"].s();
+            std::string symptoms = jsonData["symptoms"].s();
+
+            std::cout << "Received Name: " << name << ", Symptoms: " << symptoms << std::endl;
+
+            // Process the data (e.g., insert into trie or database)
+            res.code = 200;
+            res.body = "Data received successfully";
+        } catch (const std::exception& e) {
+            res.code = 500;
+            res.body = "Internal server error: " + std::string(e.what());
+        }
+    });
+
+    //sends the data of all the symptoms to the front end
+    //this is used to populate the dropdown menu in the front end
+    //this one works, pulling data from backend in general works
+    CROW_ROUTE(app, "/api/setup")([](){
+        crow::response res;
+        //set CORS headers
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+
+        //res.body is the data to be sent back to the front end
+        res.body = R"(["Fever", "Chest pains", "Abdominal pain", "Cough", "Fatigue", "Nausea", "Bleeding", "Seizures", "Dizziness", "Headaches", "Shortness of breath", "Memory loss", "Swelling", "Diarrhea", "Constipation", "Joint pain"])";
+        res.code = 200;
+        return res;
+    });
+
+    app.port(8080).multithreaded().run();
+
+    cout<<"server shutdown"<<endl;
+
+    
+    
+
     //test the trie;
-    trie.printSymptoms("Michael");
-    symp.printPatients("fever");
+    // trie.printSymptoms("Michael");
+    // symp.printPatients("fever");
 
 
     // // Test the trie
@@ -93,10 +158,28 @@ int main() {
     // bPlusTree.insert("derek", "0000000100000001");
     // bPlusTree.insert("tanvi", "0000010100010001");
 
-    // vector<pair<string, string>> results = bPlusTree.searchResults("josh");
+    // vector<pair<string, string>> nameResults = bPlusTree.searchName("derrick");
 
-    // for (int i=0; i<results.size(); i++) {
-    //     cout << "Name: " << results[i].first << ", Symptoms: " << results[i].second << endl;
+    // cout<<"Searching by name:"<<endl;
+
+    // for (int i=0; i<min(50,(int)nameResults.size()); i++) {
+    //     cout << "Name: " << nameResults[i].first << ", Symptoms: " << nameResults[i].second << endl;
+    // }
+
+    // BPlus symptomTree;
+    // symptomTree.insert("1000000000000000", "josh k");
+    // symptomTree.insert("1000000000000001", "john");
+    // symptomTree.insert("1000000000001111", "josh l");
+    // symptomTree.insert("0000000000000001", "josh p");
+    // symptomTree.insert("0000000000000011", "jenna");
+    // symptomTree.insert("0000000100001011", "jacob");
+
+    // vector<pair<string, string>> sympResults = symptomTree.searchSymp("0000000000001000");
+
+    // cout<<endl<<"Searching by symptom:"<<endl;
+
+    // for (int i=0; i<min(50,(int)sympResults.size()); i++) {
+    //     cout << "Name: " << sympResults[i].second << ", Symptoms: " << sympResults[i].first << endl;
     // }
 
 
