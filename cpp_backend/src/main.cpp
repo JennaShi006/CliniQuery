@@ -5,6 +5,8 @@
 #include "trieName.h"
 #include "trieSymp.h"
 #include <vector>
+#define CROW_USE_ASIO   // tells Crow to use standalone ASIO
+#include "crow.h"
 
 
 using namespace std;
@@ -38,6 +40,14 @@ void insertData(TrieName& trieName, TrieSymp& symp, const auto& line) {
 
 
 int main() {
+    crow::SimpleApp app;
+    CROW_ROUTE(app, "/")([](){
+        return "Crow is working!";
+    });
+
+    app.port(18080).multithreaded().run();
+
+    cout<<"server shutdown"<<endl;
     TrieName trie;
     TrieSymp symp;
     // Open the CSV file

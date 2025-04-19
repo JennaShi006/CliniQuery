@@ -252,8 +252,8 @@ vector<pair<string,string>> BPlus::searchResults(const string& key) {
         Leaf* leftLeaf = topResult.first;
         Leaf* rightLeaf = topResult.first;
 
-        // Add the top result and the 50 closest results
-        while (count < 50){
+        // Add the top result and the closest results in descending order
+        while (leftLeaf != nullptr || rightLeaf != nullptr){
 
             // Try adding from the right
             if (rightLeaf != nullptr) {
@@ -262,6 +262,10 @@ vector<pair<string,string>> BPlus::searchResults(const string& key) {
                     results.push_back({rightLeaf->keys[right], rightLeaf->values[right]});
                     right++;
                     count++;
+                    // Keep going for same first name
+                    if (rightLeaf->keys[right].substr(0, key.size())==key) {
+                        continue;
+                    }
                 } else {
                     // Index is out of bounds, move to the next leaf
                     rightLeaf = rightLeaf->next;
@@ -271,7 +275,6 @@ vector<pair<string,string>> BPlus::searchResults(const string& key) {
                     }
                     // If rightLeaf became nullptr, the outer `if (rightLeaf != nullptr)` will fail next time
                 }
-                continue;
             }
 
             if (leftLeaf != nullptr) {
@@ -292,11 +295,6 @@ vector<pair<string,string>> BPlus::searchResults(const string& key) {
                     }
                     // If leftLeaf became nullptr, the outer `if (leftLeaf != nullptr)` will fail next time
                 }
-            }
-
-            // Termination condition: If both directions are exhausted
-            if (leftLeaf == nullptr && rightLeaf == nullptr) {
-                break;
             }
 
         }
