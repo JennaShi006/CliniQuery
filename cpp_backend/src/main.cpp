@@ -41,6 +41,24 @@ void insertData(TrieName& trieName, TrieSymp& symp, const auto& line) {
     trieName.insert(fullName, symptomsBinary);
 }
 
+void insertBPlus(BPlus& nameTree, BPlus& sympTree, const auto& line) {
+
+    stringstream ss(line);
+    string fullName, symptomData;
+
+    // Read the full name (first column)
+    getline(ss, fullName, ',');
+
+    // Read the rest of the symptom data (remaining columns)
+    string symptomsBinary;
+    while (getline(ss, symptomData, ',')) {
+        symptomsBinary += symptomData;
+    }
+
+    // Insert the full name and symptoms into the tree
+    nameTree.insert(fullName, symptomsBinary);
+    sympTree.insert(symptomsBinary, fullName);
+}
 
 int main() {
     // Initialize the trie for names and symptoms
@@ -147,40 +165,43 @@ int main() {
 
 
 
+    // Test B+ Tree
+    BPlus nameTree;
+    BPlus symptomTree;
 
-    // BPlus bPlusTree;
-    // bPlusTree.insert("josh k", "0000000000000000");
-    // bPlusTree.insert("josh l", "1000000000000000");
-    // bPlusTree.insert("jenna", "0100000000000000");
-    // bPlusTree.insert("josh p", "0000100000100000");
-    // bPlusTree.insert("jerry", "0001000000110000");
-    // bPlusTree.insert("derrick", "0001100000110000");
-    // bPlusTree.insert("derek", "0000000100000001");
-    // bPlusTree.insert("tanvi", "0000010100010001");
+    // Open the CSV file
+    ifstream file("C:/Users/derri/CLionProjects/COP3530/CliniQuery/CliniQuery_Data.csv");
+    if (!file.is_open()) {
+        cerr << "Error: Could not open the file." << endl;
+        return 1;
+    }
 
-    // vector<pair<string, string>> nameResults = bPlusTree.searchName("derrick");
+    string line;
+    getline(file, line); // Skip the header line
 
-    // cout<<"Searching by name:"<<endl;
+    // Read each line from the CSV
+    while (getline(file, line)) {
+        insertBPlus(nameTree, symptomTree, line);
+    }
 
-    // for (int i=0; i<min(50,(int)nameResults.size()); i++) {
-    //     cout << "Name: " << nameResults[i].first << ", Symptoms: " << nameResults[i].second << endl;
-    // }
+    file.close();
 
-    // BPlus symptomTree;
-    // symptomTree.insert("1000000000000000", "josh k");
-    // symptomTree.insert("1000000000000001", "john");
-    // symptomTree.insert("1000000000001111", "josh l");
-    // symptomTree.insert("0000000000000001", "josh p");
-    // symptomTree.insert("0000000000000011", "jenna");
-    // symptomTree.insert("0000000100001011", "jacob");
+    vector<pair<string, string>> nameResults = nameTree.searchName("Derrick Ma");
 
-    // vector<pair<string, string>> sympResults = symptomTree.searchSymp("0000000000001000");
+    cout<<"Searching by name:"<<endl;
 
-    // cout<<endl<<"Searching by symptom:"<<endl;
+    for (int i=0; i<min(50,(int)nameResults.size()); i++) {
+        cout << "Name: " << nameResults[i].first << ", Symptoms: " << nameResults[i].second << endl;
+    }
 
-    // for (int i=0; i<min(50,(int)sympResults.size()); i++) {
-    //     cout << "Name: " << sympResults[i].second << ", Symptoms: " << sympResults[i].first << endl;
-    // }
+
+    vector<pair<string, string>> sympResults = symptomTree.searchSymp("0000000000001000");
+
+    cout<<endl<<"Searching by symptom:"<<endl;
+
+    for (int i=0; i<min(50,(int)sympResults.size()); i++) {
+        cout << "Name: " << sympResults[i].second << ", Symptoms: " << sympResults[i].first << endl;
+    }
 
 
     return 0;
