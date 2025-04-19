@@ -261,7 +261,7 @@ vector<pair<string,string>> BPlus::searchName(const string& key) {
                     results.push_back({rightLeaf->keys[right], rightLeaf->values[right]});
                     right++;
                     // Keep going for same first name
-                    if (rightLeaf->keys[right].substr(0, key.size())==key) {
+                    if (rightLeaf->keys[right-1].substr(0, key.size())==key) {
                         continue;
                     }
                 } else {
