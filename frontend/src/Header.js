@@ -1,6 +1,7 @@
 const Header = () =>{
     return(
-        <div>HI</div>
+        <div>Something cute in the future</div>
+        
     )
 }
 
