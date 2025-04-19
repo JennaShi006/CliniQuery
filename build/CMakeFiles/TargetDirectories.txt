@@ -1,3 +1,0 @@
-C:/Users/haora/CliniQuery/build/CMakeFiles/CliniQuery.dir
-C:/Users/haora/CliniQuery/build/CMakeFiles/edit_cache.dir
-C:/Users/haora/CliniQuery/build/CMakeFiles/rebuild_cache.dir

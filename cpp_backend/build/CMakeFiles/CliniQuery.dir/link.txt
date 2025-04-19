@@ -1,3 +1,3 @@
 "C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\CliniQuery.dir/objects.a
-C:\ProgramData\mingw64\mingw64\bin\ar.exe qc CMakeFiles\CliniQuery.dir/objects.a @CMakeFiles\CliniQuery.dir\objects1.rsp
-C:\ProgramData\mingw64\mingw64\bin\c++.exe -Wl,--whole-archive CMakeFiles\CliniQuery.dir/objects.a -Wl,--no-whole-archive -o CliniQuery.exe -Wl,--out-implib,libCliniQuery.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\CliniQuery.dir\linkLibs.rsp
+C:\mingw64\bin\ar.exe qc CMakeFiles\CliniQuery.dir/objects.a @CMakeFiles\CliniQuery.dir\objects1.rsp
+C:\mingw64\bin\c++.exe -Wl,--whole-archive CMakeFiles\CliniQuery.dir/objects.a -Wl,--no-whole-archive -o CliniQuery.exe -Wl,--out-implib,libCliniQuery.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\CliniQuery.dir\linkLibs.rsp
