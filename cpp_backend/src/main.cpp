@@ -64,6 +64,10 @@ int main() {
     // Initialize the trie for names and symptoms
     TrieName trie;
     TrieSymp symp;
+    
+    BPlus nameTree;
+    BPlus symptomTree;
+
     // Open the CSV file
     ifstream file("../data_gen/CliniQuery_Data.csv");
     if (!file.is_open()) {
@@ -77,6 +81,7 @@ int main() {
     // Read each line from the CSV
     while (getline(file, line)) {
         insertData(trie, symp, line);
+        insertBPlus(nameTree, symptomTree, line);
     }
 
     file.close();
@@ -166,26 +171,7 @@ int main() {
 
 
     // Test B+ Tree
-    BPlus nameTree;
-    BPlus symptomTree;
-
-    // Open the CSV file
-    ifstream file("C:/Users/derri/CLionProjects/COP3530/CliniQuery/CliniQuery_Data.csv");
-    if (!file.is_open()) {
-        cerr << "Error: Could not open the file." << endl;
-        return 1;
-    }
-
-    string line;
-    getline(file, line); // Skip the header line
-
-    // Read each line from the CSV
-    while (getline(file, line)) {
-        insertBPlus(nameTree, symptomTree, line);
-    }
-
-    file.close();
-
+    
     vector<pair<string, string>> nameResults = nameTree.searchName("Derrick Ma");
 
     cout<<"Searching by name:"<<endl;
