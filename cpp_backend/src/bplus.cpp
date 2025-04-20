@@ -3,8 +3,8 @@
 BPlus::Leaf::Leaf() {
     this->isLeaf = true;
     // Reserve space based on order to potentially reduce reallocations
-    this->keys.resize(order-1); // Max keys = order - 1 (l = n-1)
-    this->values.resize(order-1);
+    this->keys.resize(order); // Max keys = order - 1 (l = n-1)
+    this->values.resize(order);
     this->keyCount = 0;
 }
 
@@ -33,9 +33,9 @@ void BPlus::Leaf::insert(const string& key, const string& value) {
 BPlus::InternalNode::InternalNode() {
     this->isLeaf = false;
     // Max keys = order - 1
-    this->keys.resize(order-1);
+    this->keys.resize(order);
     // Max children = order
-    this->children.resize(order);
+    this->children.resize(order+1);
     this->keyCount = 0;
 }
 
@@ -99,7 +99,7 @@ void BPlus::splitLeaf(Leaf* leaf) {
 
     // Copy second half of keys/values to the new leaf
     newLeaf->keyCount = 0;
-    for (int i = split; i < leaf->keyCount; i++) {
+    for (int i = split; i < leaf->keyCount; ++i) {
         newLeaf->keys[newLeaf->keyCount] = leaf->keys[i];
         newLeaf->values[newLeaf->keyCount] = leaf->values[i];
         newLeaf->keyCount++;
@@ -138,11 +138,11 @@ void BPlus::splitInternal(InternalNode* node) {
     // Copy keys and children after the split point to the new node
     // Keys from split + 1 onwards
     newNode->keyCount = 0;
-    for (int i = split + 1; i < node->keyCount; i++) {
+    for (int i = split + 1; i < node->keyCount; ++i) {
         newNode->keys[newNode->keyCount++] = node->keys[i];
     }
     // Children from split + 1 onwards
-    for (int i = split + 1; i <= node->keyCount; i++) {
+    for (int i = split + 1; i <= node->keyCount; ++i) {
          newNode->children[i - (split + 1)] = node->children[i];
          if(node->children[i]) node->children[i]->parent = newNode; // Update parent pointer
     }
@@ -261,7 +261,7 @@ vector<pair<string,string>> BPlus::searchName(const string& key) {
                     results.push_back({rightLeaf->keys[right], rightLeaf->values[right]});
                     right++;
                     // Keep going for same first name
-                    if (rightLeaf->keys[right].substr(0, key.size())==key) {
+                    if (rightLeaf->keys[right-1].substr(0, key.size())==key) {
                         continue;
                     }
                 } else {
@@ -272,6 +272,7 @@ vector<pair<string,string>> BPlus::searchName(const string& key) {
                         right = 0;
                     }
                     // If rightLeaf became nullptr, the outer `if (rightLeaf != nullptr)` will fail next time
+                    continue;
                 }
             }
 
