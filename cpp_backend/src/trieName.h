@@ -52,5 +52,6 @@ class TrieName {
     
         bool startsWith(const std::string& prefix);
         void printSymptoms(const string& name);
+        vector<vector<string>> patientList(const string& name);
     };
 

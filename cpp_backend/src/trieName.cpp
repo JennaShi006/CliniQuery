@@ -92,3 +92,28 @@ void TrieName::printSymptoms(const string& name) {
         std::cout << std::endl;
     }
 }
+
+vector<vector<string>> TrieName::patientList(const string& name) {
+    // Normalize the input: convert to lowercase
+    std::string normalizedName = name;
+    std::transform(normalizedName.begin(), normalizedName.end(), normalizedName.begin(), ::tolower);
+
+    unordered_set<string> symptoms = search(normalizedName);
+    vector<vector<string>> result;
+    if (symptoms.empty()) {
+        std::cout << "No symptoms found for the name: " << name << std::endl;
+        return result;
+    }
+
+    for (const auto& symptom : symptoms) {
+        vector<string> patientData;
+        for (int i=0; i<symptom.length(); i++){
+            if(symptom[i] == '1'){
+                patientData.push_back(symptomsList[i]);
+            }
+            
+        }
+        result.push_back(patientData);
+    }
+    return result;
+}

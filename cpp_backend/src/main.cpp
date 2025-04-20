@@ -6,7 +6,6 @@
 #include "trieSymp.h"
 #include <vector>
 #define CROW_USE_ASIO   // tells Crow to use standalone ASIO
-#define CROW_ENABLE_MIDDLEWARE
 #include "crow.h"
 #include "json.hpp"
 
@@ -41,6 +40,13 @@ void insertData(TrieName& trieName, TrieSymp& symp, const auto& line) {
     trieName.insert(fullName, symptomsBinary);
 }
 
+void setCORS(crow::response& res) {
+    res.set_header("Access-Control-Allow-Origin", "*");
+    res.set_header("Access-Control-Allow-Credentials", "true");
+    res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    res.set_header("Access-Control-Allow-Headers", "Content-Type");
+}
+
 
 int main() {
     // Initialize the trie for names and symptoms
@@ -64,70 +70,92 @@ int main() {
     file.close();
 
     crow::SimpleApp app;
-    ///api/data is just an endpoint to test the server
-    CROW_ROUTE(app, "/api/data")([](){
+
+    // CROW_ROUTE(app, "/<path>")
+    // .methods(crow::HTTPMethod::OPTIONS)
+    // ([](const crow::request&, crow::response& res, std::string /*path*/) {
+    //     res.code = 204;
+    //     res.set_header("Access-Control-Allow-Origin", "*");
+    //     res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    //     res.set_header("Access-Control-Allow-Headers", "Content-Type");
+    //     return move(res);
+    // });
+
+    CROW_ROUTE(app, "/api/data").methods("OPTIONS"_method)([] {
         crow::response res;
-
-        //set CORS headers
+        
         res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
         res.set_header("Access-Control-Allow-Headers", "Content-Type");
-
-        //res.body is the data to be sent back to the front end
-        res.body = R"([{"name":"Josh Miles","symptoms":"0000000000000000"},{"name":"Jenna Shi","symptoms":"1000000000000000"},{"name":"Michael","symptoms":"0100000000000000"},{"name":"Tanvi","symptoms":"1100000000100000"},{"name":"Jerry","symptoms":"0011000000110000"},{"name":"Derrick","symptoms":"0011100000111111"},{"name":"Jacob","symptoms":"1111111111111111"}])";
-        res.code = 200; // HTTP status code 200 OK
+        res.code = 200;
+        res.end();
         return res;
     });
+
+    vector<vector<string>> patientList;
+    CROW_ROUTE(app, "/api/data").methods("POST"_method)([&trie, &patientList](const crow::request& req) {
+        crow::response res;
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+
+        // Parse the request body as plain text
+        std::string body = req.body;
+        std::cout << "Received body: " << body << std::endl;
+
+        // Convert the plain text body to JSON format
+        crow::json::wvalue result;
+        result["input"] = body;
+        patientList = trie.patientList(body);
+
+        res.code = 200;
+        res.set_header("Content-Type", "application/json");
+        res.body = result.dump(); // Serialize the JSON response
+        return std::move(res);
+    });
     
-    //This doesn't work yet; this gets the data that is sent back from the frontend
-    CROW_ROUTE(app, "/api/data").methods("OPTIONS"_method, "POST"_method)([](const crow::request& req, crow::response& res) {
-        if (req.method == "OPTIONS"_method) {
-            res.set_header("Access-Control-Allow-Origin", "*");
-            res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-            res.set_header("Access-Control-Allow-Headers", "Content-Type");
-            res.code = 204; // No Content
-            res.end();
-            return;
-        }
+    CROW_ROUTE(app, "/api/trieNameSearch")([&trie, &patientList]() {
+        crow::response res;
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
 
-        try {
-            auto jsonData = crow::json::load(req.body);
-            if (!jsonData || !jsonData.has("name") || !jsonData.has("symptoms")) {
-                res.code = 400;
-                res.body = "Invalid JSON structure";
-                return;
+        // Serialize the patientList into JSON format
+        crow::json::wvalue result;
+        crow::json::wvalue::list patientsJson;
+        for (const auto& patient : patientList) {
+            crow::json::wvalue::list patientJson;
+            for (const auto& field : patient) {
+                patientJson.push_back(field);
             }
-
-            std::string name = jsonData["name"].s();
-            std::string symptoms = jsonData["symptoms"].s();
-
-            std::cout << "Received Name: " << name << ", Symptoms: " << symptoms << std::endl;
-
-            // Process the data (e.g., insert into trie or database)
-            res.code = 200;
-            res.body = "Data received successfully";
-        } catch (const std::exception& e) {
-            res.code = 500;
-            res.body = "Internal server error: " + std::string(e.what());
+            patientsJson.push_back(std::move(patientJson));
         }
+        result["patients"] = std::move(patientsJson);
+        
+        res.set_header("Content-Type", "application/json");
+        res.body = result.dump(); // Serialize the JSON response
+        res.code = 200;
+        return res;
     });
 
-    //sends the data of all the symptoms to the front end
-    //this is used to populate the dropdown menu in the front end
-    //this one works, pulling data from backend in general works
     CROW_ROUTE(app, "/api/setup")([](){
         crow::response res;
         //set CORS headers
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Credentials", "true");
-        res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+        setCORS(res);
 
         //res.body is the data to be sent back to the front end
         res.body = R"(["Fever", "Chest pains", "Abdominal pain", "Cough", "Fatigue", "Nausea", "Bleeding", "Seizures", "Dizziness", "Headaches", "Shortness of breath", "Memory loss", "Swelling", "Diarrhea", "Constipation", "Joint pain"])";
         res.code = 200;
         return res;
     });
+    CROW_ROUTE(app, "/api/setup").methods("OPTIONS"_method)([] {
+        crow::response res;
+        setCORS(res);
+        res.code = 200;
+        return res;
+    });
+    
 
     app.port(8080).multithreaded().run();
 
