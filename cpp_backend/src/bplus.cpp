@@ -241,11 +241,23 @@ pair<BPlus::Leaf*, int> BPlus::search(const string& key) {
 }
 
 // Search for a name and return the closest results' key-value pairs
-vector<pair<string,string>> BPlus::searchName(const string& key) {
-    vector<pair<string,string>> results;
+vector<pair<string,vector<string>>> BPlus::searchName(const string& key) {
+    vector<string> symptoms = {
+        "Fever", "Chest pains", "Abdominal pain", "Cough", "Fatigue", "Nausea",
+        "Bleeding", "Seizures", "Dizziness", "Headaches", "Shortness of breath",
+        "Memory loss", "Swelling", "Diarrhea", "Constipation", "Joint pain"
+    };
+    vector<pair<string,vector<string>>> results;
     pair<Leaf*, int> topResult = search(key);
     if (topResult.first != nullptr) {
-        results.push_back({topResult.first->keys[topResult.second], topResult.first->values[topResult.second]});
+        vector<string> firstSymps;
+        for (int i=0; i<16; i++) {
+            if (topResult.first->values[topResult.second].substr(i, 1) == "1") {
+                firstSymps.push_back(symptoms[i]);
+            }
+        }
+        results.push_back({topResult.first->keys[topResult.second], firstSymps});
+
         int left = topResult.second - 1;
         int right = topResult.second + 1;
         Leaf* leftLeaf = topResult.first;
@@ -258,7 +270,14 @@ vector<pair<string,string>> BPlus::searchName(const string& key) {
             if (rightLeaf != nullptr) {
                 if (right < rightLeaf->keyCount) {
                     // Valid index in current rightLeaf
-                    results.push_back({rightLeaf->keys[right], rightLeaf->values[right]});
+                    // Make a vector containing the symptoms written out
+                    vector<string> symps;
+                    for (int i=0; i<16; i++) {
+                        if (rightLeaf->values[right].substr(i, 1) == "1") {
+                            symps.push_back(symptoms[i]);
+                        }
+                    }
+                    results.push_back({rightLeaf->keys[right], symps});
                     right++;
                     // Keep going for same first name
                     if (rightLeaf->keys[right-1].substr(0, key.size())==key) {
@@ -279,7 +298,14 @@ vector<pair<string,string>> BPlus::searchName(const string& key) {
             if (leftLeaf != nullptr) {
                 if (left >= 0) {
                     // Valid index in current leftLeaf
-                    results.push_back({leftLeaf->keys[left], leftLeaf->values[left]});
+                    // Make a vector of symptoms written out
+                    vector<string> symps;
+                    for (int i=0; i<16; i++) {
+                        if (leftLeaf->values[left].substr(i, 1) == "1") {
+                            symps.push_back(symptoms[i]);
+                        }
+                    }
+                    results.push_back({leftLeaf->keys[left], symps});
                     left--;
                 } else {
                     // Index is out of bounds, move to the previous leaf
@@ -298,12 +324,40 @@ vector<pair<string,string>> BPlus::searchName(const string& key) {
 }
 
 // Search for a symptom and return the closest results' key-value pairs
-vector<pair<string,string>> BPlus::searchSymp(const string& key) {
-    int symp = key.find("1");
-    vector<pair<string,string>> results;
-    pair<Leaf*, int> topResult = search(key);
+vector<pair<string,vector<string>>> BPlus::searchSymp(const string& key) {
+    vector<string> symptoms = {
+        "Fever", "Chest pains", "Abdominal pain", "Cough", "Fatigue", "Nausea",
+        "Bleeding", "Seizures", "Dizziness", "Headaches", "Shortness of breath",
+        "Memory loss", "Swelling", "Diarrhea", "Constipation", "Joint pain"
+    };
+
+    // Find index of positive symptom
+    int symp;
+    string lowKey = key;
+    transform(lowKey.begin(), lowKey.end(), lowKey.begin(), ::tolower);
+    string bitstring = "";
+
+    for (int i=0; i<16; i++) {
+        string s = symptoms[i];
+        transform(s.begin(), s.end(), s.begin(), ::tolower);
+        if (s == lowKey) {
+            symp = i;
+            bitstring += "1";
+        } else {
+            bitstring += "0";
+        }
+    }
+
+    vector<pair<string,vector<string>>> results;
+    pair<Leaf*, int> topResult = search(bitstring);
     if (topResult.first != nullptr) {
-        results.push_back({topResult.first->keys[topResult.second], topResult.first->values[topResult.second]});
+        vector<string> firstSymps;
+        for (int i=0; i<16; i++) {
+            if (topResult.first->keys[topResult.second].substr(i, 1) == "1") {
+                firstSymps.push_back(symptoms[i]);
+            }
+        }
+        results.push_back({topResult.first->values[topResult.second], firstSymps});
         int left = topResult.second - 1;
         int right = topResult.second + 1;
         Leaf* leftLeaf = topResult.first;
@@ -316,7 +370,13 @@ vector<pair<string,string>> BPlus::searchSymp(const string& key) {
                 if (right < rightLeaf->keyCount) {
                     // Valid index in current rightLeaf and has matching symptom
                     if (rightLeaf->keys[right].substr(symp,1) == "1") {
-                        results.push_back({rightLeaf->keys[right], rightLeaf->values[right]});
+                        vector<string> symps;
+                        for (int i=0; i<16; i++) {
+                            if (rightLeaf->keys[right].substr(i, 1) == "1") {
+                                symps.push_back(symptoms[i]);
+                            }
+                        }
+                        results.push_back({rightLeaf->values[right], symps});
                     }
                     right++;
                     // Keep going for same symptom bitstring that matches exactly
@@ -338,7 +398,13 @@ vector<pair<string,string>> BPlus::searchSymp(const string& key) {
                 if (left >= 0) {
                     // Valid index in current leftLeaf and has matching symptom
                     if (leftLeaf->keys[left].substr(symp,1) == "1") {
-                        results.push_back({leftLeaf->keys[left], leftLeaf->values[left]});
+                        vector<string> symps;
+                        for (int i=0; i<16; i++) {
+                            if (leftLeaf->keys[left].substr(i, 1) == "1") {
+                                symps.push_back(symptoms[i]);
+                            }
+                        }
+                        results.push_back({leftLeaf->values[left], symps});
                     }
                     left--;
                 } else {

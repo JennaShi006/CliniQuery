@@ -191,7 +191,7 @@ int main() {
         return res;
     });
 
-    vector<pair<string, string>> nameResults;
+    vector<pair<string, vector<string>>> nameResults;
     CROW_ROUTE(app, "/api/BPlusName").methods("POST"_method)([&nameTree, &nameResults](const crow::request& req) {
         crow::response res;
         setCORS(res);
