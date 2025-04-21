@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const InputBar = ({ onSubmit }) => {
     const [inputType, setInputType] = useState('text'); // 'text' or 'select'
+    const [searchMethod, setSearchMethod] = useState('trie'); // 'trie' or 'bplus'
     const [textValue, setTextValue] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
     const [data, setData] = useState([]);
@@ -30,11 +31,11 @@ const InputBar = ({ onSubmit }) => {
         fetchData();
     }, []);
 
-    if(loading) {
+    if (loading) {
         return <div>Loading...</div>; // Show loading state while fetching data
     }
 
-    if (!data){
+    if (!data) {
         return <div>Error loading data</div>;
     }
 
@@ -43,9 +44,9 @@ const InputBar = ({ onSubmit }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (inputType === 'text') {
-            onSubmit({ type: 'name', value: textValue });
+            onSubmit({ type: 'name', method: searchMethod, value: textValue });
         } else if (inputType === 'select') {
-            onSubmit({ type: 'symptom', value: selectedOption });
+            onSubmit({ type: 'symptom', method: searchMethod, value: selectedOption });
         }
     };
 
@@ -69,6 +70,27 @@ const InputBar = ({ onSubmit }) => {
                         onChange={() => setInputType('select')}
                     />
                     Search By Symptom
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <input
+                        type="radio"
+                        value="trie"
+                        checked={searchMethod === 'trie'}
+                        onChange={() => setSearchMethod('trie')}
+                    />
+                    Use Trie
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        value="bplus"
+                        checked={searchMethod === 'bplus'}
+                        onChange={() => setSearchMethod('bplus')}
+                    />
+                    Use B+ Tree
                 </label>
             </div>
 

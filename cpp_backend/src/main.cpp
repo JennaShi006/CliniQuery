@@ -94,14 +94,6 @@ int main() {
     }
 
     file.close();
-    // auto search = trie.search("Michael");
-    // for (const auto& [name, symptoms] : search) {
-    //     cout << "Patient: " << name << ", Symptoms: ";
-    //     for (const auto& symptom : symptoms) {
-    //         cout << symptom << " ";
-    //     }
-    //     cout << endl;
-    // }
 
     
     cout << "Patients with Fever: ";
@@ -126,9 +118,7 @@ int main() {
     vector<pair<string, vector<string>>> patientList;
     CROW_ROUTE(app, "/api/trieName").methods("POST"_method)([&trie, &patientList](const crow::request& req) {
         crow::response res;
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+        setCORS(res);
 
         // Parse the request body as plain text
         std::string body = req.body;
@@ -147,9 +137,7 @@ int main() {
     
     CROW_ROUTE(app, "/api/trieNameSearch")([&trie, &patientList]() {
         crow::response res;
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+        setCORS(res);
 
         // Serialize the patientList into JSON format
         crow::json::wvalue result;
@@ -202,6 +190,48 @@ int main() {
             patientsJson.push_back(std::move(patient));
         }
         result["patients"] = std::move(patientsJson);
+        
+        res.set_header("Content-Type", "application/json");
+        res.body = result.dump(); // Serialize the JSON response
+        res.code = 200;
+        return res;
+    });
+
+    vector<pair<string, vector<string>>> nameResults;
+    CROW_ROUTE(app, "/api/BPlusName").methods("POST"_method)([&nameTree, &nameResults](const crow::request& req) {
+        crow::response res;
+        setCORS(res);
+
+        // Parse the request body as plain text
+        std::string body = req.body;
+        std::cout << "Received body: " << body << std::endl;
+
+        // Convert the plain text body to JSON format
+        crow::json::wvalue result;
+        result["input"] = body;
+        nameResults = nameTree.searchName(body);
+
+        res.code = 200;
+        res.set_header("Content-Type", "application/json");
+        res.body = result.dump(); // Serialize the JSON response
+        return std::move(res);
+    });
+
+    CROW_ROUTE(app, "/api/BPlusNameSearch")([&nameTree, &nameResults]() {
+        crow::response res;
+        setCORS(res);
+
+        // Serialize the patientList into JSON format
+        crow::json::wvalue result;
+        crow::json::wvalue::list patientsJson;
+
+        for (const auto& [name, symptoms] : nameResults) {
+            crow::json::wvalue::object patientJson;
+            patientJson["name"] = name;
+            patientJson["symptoms"] = symptoms;
+            patientsJson.push_back(std::move(patientJson));
+        }
+        result["results"] = std::move(patientsJson);
         
         res.set_header("Content-Type", "application/json");
         res.body = result.dump(); // Serialize the JSON response
