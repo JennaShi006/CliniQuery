@@ -7,6 +7,7 @@
 ### open 2 terminals, cd into frontend and cpp_backend/build
 ### to start frontend, run npm start
 ### for backend, build your own build files with cmake -S . -B build -G "MinGW Makefiles"
+### make sure you are in the build folder, if you aren't cd build
 ### then, run cmake --build .
 ### then, run ./CliniQuery to start the backend
 
