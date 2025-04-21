@@ -290,8 +290,6 @@ vector<pair<string,vector<string>>> BPlus::searchName(const string& key) {
                         // Reset index to the start of the new next leaf
                         right = 0;
                     }
-                    // If rightLeaf became nullptr, the outer `if (rightLeaf != nullptr)` will fail next time
-                    continue;
                 }
             }
         }
