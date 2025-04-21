@@ -93,14 +93,6 @@ int main() {
     }
 
     file.close();
-    auto search = trie.search("Michael");
-    for (const auto& [name, symptoms] : search) {
-        cout << "Patient: " << name << ", Symptoms: ";
-        for (const auto& symptom : symptoms) {
-            cout << symptom << " ";
-        }
-        cout << endl;
-    }
 
 
     crow::SimpleApp app;
@@ -120,9 +112,7 @@ int main() {
     vector<pair<string, vector<string>>> patientList;
     CROW_ROUTE(app, "/api/trieName").methods("POST"_method)([&trie, &patientList](const crow::request& req) {
         crow::response res;
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+        setCORS(res);
 
         // Parse the request body as plain text
         std::string body = req.body;
@@ -141,9 +131,7 @@ int main() {
     
     CROW_ROUTE(app, "/api/trieNameSearch")([&trie, &patientList]() {
         crow::response res;
-        res.set_header("Access-Control-Allow-Origin", "*");
-        res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+        setCORS(res);
 
         // Serialize the patientList into JSON format
         crow::json::wvalue result;
@@ -203,6 +191,48 @@ int main() {
         return res;
     });
 
+    vector<pair<string, string>> nameResults;
+    CROW_ROUTE(app, "/api/BPlusName").methods("POST"_method)([&nameTree, &nameResults](const crow::request& req) {
+        crow::response res;
+        setCORS(res);
+
+        // Parse the request body as plain text
+        std::string body = req.body;
+        std::cout << "Received body: " << body << std::endl;
+
+        // Convert the plain text body to JSON format
+        crow::json::wvalue result;
+        result["input"] = body;
+        nameResults = nameTree.searchName(body);
+
+        res.code = 200;
+        res.set_header("Content-Type", "application/json");
+        res.body = result.dump(); // Serialize the JSON response
+        return std::move(res);
+    });
+
+    CROW_ROUTE(app, "/api/BPlusNameSearch")([&nameTree, &nameResults]() {
+        crow::response res;
+        setCORS(res);
+
+        // Serialize the patientList into JSON format
+        crow::json::wvalue result;
+        crow::json::wvalue::list patientsJson;
+
+        for (const auto& [name, symptoms] : nameResults) {
+            crow::json::wvalue::object patientJson;
+            patientJson["name"] = name;
+            patientJson["symptoms"] = symptoms;
+            patientsJson.push_back(std::move(patientJson));
+        }
+        result["results"] = std::move(patientsJson);
+        
+        res.set_header("Content-Type", "application/json");
+        res.body = result.dump(); // Serialize the JSON response
+        res.code = 200;
+        return res;
+    });
+
     CROW_ROUTE(app, "/api/setup")([](){
         crow::response res;
         //set CORS headers
@@ -241,22 +271,22 @@ int main() {
 
     // Test B+ Tree
     
-    vector<pair<string, string>> nameResults = nameTree.searchName("Derrick Ma");
+    // vector<pair<string, string>> nameResults = nameTree.searchName("Derrick Ma");
 
-    cout<<"Searching by name:"<<endl;
+    // cout<<"Searching by name:"<<endl;
 
-    for (int i=0; i<min(50,(int)nameResults.size()); i++) {
-        cout << "Name: " << nameResults[i].first << ", Symptoms: " << nameResults[i].second << endl;
-    }
+    // for (int i=0; i<min(50,(int)nameResults.size()); i++) {
+    //     cout << "Name: " << nameResults[i].first << ", Symptoms: " << nameResults[i].second << endl;
+    // }
 
 
-    vector<pair<string, string>> sympResults = symptomTree.searchSymp("0000000000001000");
+    // vector<pair<string, string>> sympResults = symptomTree.searchSymp("0000000000001000");
 
-    cout<<endl<<"Searching by symptom:"<<endl;
+    // cout<<endl<<"Searching by symptom:"<<endl;
 
-    for (int i=0; i<min(50,(int)sympResults.size()); i++) {
-        cout << "Name: " << sympResults[i].second << ", Symptoms: " << sympResults[i].first << endl;
-    }
+    // for (int i=0; i<min(50,(int)sympResults.size()); i++) {
+    //     cout << "Name: " << sympResults[i].second << ", Symptoms: " << sympResults[i].first << endl;
+    // }
 
 
     return 0;

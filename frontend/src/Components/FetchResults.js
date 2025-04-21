@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './FetchResults.css'; // Import the CSS file for styling
 
-const FetchResultsTrie = ({ searchType }) => {
+const FetchResults = ({ searchType, searchMethod }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -10,7 +10,16 @@ const FetchResultsTrie = ({ searchType }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const endpoint = searchType === 'name' ? '/api/trieNameSearch' : '/api/trieSympSearch';
+                // Determine the endpoint dynamically based on searchType and searchMethod
+                const endpoint =
+                    searchMethod === 'trie'
+                        ? searchType === 'name'
+                            ? '/api/trieNameSearch'
+                            : '/api/trieSympSearch'
+                        : searchType === 'name'
+                        ? '/api/BPlusNameSearch'
+                        : '/api/BPlusSympSearch';
+
                 const response = await fetch(`http://localhost:8080${endpoint}`, {
                     method: 'GET',
                 });
@@ -30,7 +39,7 @@ const FetchResultsTrie = ({ searchType }) => {
         };
 
         fetchData();
-    }, [searchType]);
+    }, [searchType, searchMethod]); // Re-fetch data when searchType or searchMethod changes
 
     const isSymptomSearch = searchType === 'symptom';
     const lastNames = isSymptomSearch ? data : Object.keys(data); // Extract keys for name search or use the vector for symptom search
@@ -87,4 +96,4 @@ const FetchResultsTrie = ({ searchType }) => {
     );
 };
 
-export default FetchResultsTrie;
+export default FetchResults;
