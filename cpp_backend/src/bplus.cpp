@@ -259,17 +259,20 @@ vector<pair<string,vector<string>>> BPlus::searchName(const string& key) {
         }
         results.push_back({topResult.first->keys[topResult.second], firstSymps});
 
-        int left = topResult.second - 1;
+        // Only has to search right since search() returns the first instance of the first name
         int right = topResult.second + 1;
-        Leaf* leftLeaf = topResult.first;
         Leaf* rightLeaf = topResult.first;
 
         // Add the top result and the closest results in descending order
-        while (leftLeaf != nullptr || rightLeaf != nullptr){
+        while (rightLeaf != nullptr){
 
             // Try adding from the right
             if (rightLeaf != nullptr) {
                 if (right < rightLeaf->keyCount) {
+                    // Break if different first name
+                    if (rightLeaf->keys[right].substr(0, key.size())==key) {
+                        break;
+                    }
                     // Valid index in current rightLeaf
                     // Make a vector containing the symptoms written out
                     vector<string> symps;
@@ -280,10 +283,6 @@ vector<pair<string,vector<string>>> BPlus::searchName(const string& key) {
                     }
                     results.push_back({rightLeaf->keys[right], symps});
                     right++;
-                    // Keep going for same first name
-                    if (rightLeaf->keys[right-1].substr(0, key.size())==key) {
-                        continue;
-                    }
                 } else {
                     // Index is out of bounds, move to the next leaf
                     rightLeaf = rightLeaf->next;
@@ -295,30 +294,6 @@ vector<pair<string,vector<string>>> BPlus::searchName(const string& key) {
                     continue;
                 }
             }
-
-            if (leftLeaf != nullptr) {
-                if (left >= 0) {
-                    // Valid index in current leftLeaf
-                    // Make a vector of symptoms written out
-                    vector<string> symps;
-                    for (int i=0; i<16; i++) {
-                        if (leftLeaf->values[left].substr(i, 1) == "1") {
-                            symps.push_back(symptoms[i]);
-                        }
-                    }
-                    results.push_back({leftLeaf->keys[left], symps});
-                    left--;
-                } else {
-                    // Index is out of bounds, move to the previous leaf
-                    leftLeaf = leftLeaf->prev;
-                    if (leftLeaf != nullptr) {
-                        // Reset index to the end of the new previous leaf
-                        left = leftLeaf->keyCount - 1;
-                    }
-                    // If leftLeaf became nullptr, the outer `if (leftLeaf != nullptr)` will fail next time
-                }
-            }
-
         }
     }
     return results;
