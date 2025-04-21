@@ -6,12 +6,14 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
+#include <chrono>
 
 using namespace std;
 
 
 class BPlus{
-
+    double nameRuntime;
+    double sympRuntime;
     // Large order for smaller height / shallower tree allowing for more efficient search
     // At most 100 children and 99 keys for non-leaf nodes, 99 keys for leaf node
     const static int order = 100;
@@ -108,6 +110,9 @@ class BPlus{
 
     // Search for a symptom and return the closest results' key-value pairs
     vector<pair<string,vector<string>>> searchSymp(const string& key);
+
+    double getNameRuntime();
+    double getSympRuntime();
 
 };
 

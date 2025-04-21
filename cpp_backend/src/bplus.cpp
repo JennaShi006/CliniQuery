@@ -242,6 +242,7 @@ pair<BPlus::Leaf*, int> BPlus::search(const string& key) {
 
 // Search for a name and return the closest results' key-value pairs
 vector<pair<string,vector<string>>> BPlus::searchName(const string& key) {
+    auto start = std::chrono::high_resolution_clock::now();
     vector<string> symptoms = {
         "Fever", "Chest pains", "Abdominal pain", "Cough", "Fatigue", "Nausea",
         "Bleeding", "Seizures", "Dizziness", "Headaches", "Shortness of breath",
@@ -321,10 +322,13 @@ vector<pair<string,vector<string>>> BPlus::searchName(const string& key) {
         }
     }
     return results;
+    auto end = std::chrono::high_resolution_clock::now();
+    nameRuntime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
 }
 
 // Search for a symptom and return the closest results' key-value pairs
 vector<pair<string,vector<string>>> BPlus::searchSymp(const string& key) {
+    auto start = std::chrono::high_resolution_clock::now();
     vector<string> symptoms = {
         "Fever", "Chest pains", "Abdominal pain", "Cough", "Fatigue", "Nausea",
         "Bleeding", "Seizures", "Dizziness", "Headaches", "Shortness of breath",
@@ -421,4 +425,6 @@ vector<pair<string,vector<string>>> BPlus::searchSymp(const string& key) {
         }
     }
     return results;
+    auto end = std::chrono::high_resolution_clock::now();
+    sympRuntime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
 }

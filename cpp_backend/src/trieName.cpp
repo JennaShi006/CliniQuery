@@ -1,5 +1,5 @@
 #include "trieName.h"
-
+#include <chrono>
 void TrieName::insert(const std::string& name, const std::string& symptoms) {
     // Normalize the input: convert to lowercase
     std::string normalizedName = name;
@@ -39,6 +39,7 @@ void TrieName::insert(const std::string& name, const std::string& symptoms) {
 }
 
 unordered_map<string, unordered_set<string>> TrieName::search(const std::string& name) {
+    auto start = std::chrono::high_resolution_clock::now();
     // Normalize the input: convert to lowercase
     unordered_map<string, unordered_set<string>> result;
     std::string normalizedWord = name;
@@ -78,8 +79,9 @@ unordered_map<string, unordered_set<string>> TrieName::search(const std::string&
         }
     }
     
-
     return result;
+    auto end = std::chrono::high_resolution_clock::now();
+    runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
 }
 
 bool TrieName::startsWith(const std::string& prefix) {
@@ -100,6 +102,7 @@ bool TrieName::startsWith(const std::string& prefix) {
 
 void TrieName::printSymptoms(const string& name) {
     // Normalize the input: convert to lowercase
+    
     std::string normalizedName = name;
     std::transform(normalizedName.begin(), normalizedName.end(), normalizedName.begin(), ::tolower);
     size_t spacePos = normalizedName.find(' ');
@@ -157,4 +160,7 @@ vector<pair<string, vector<string>>> TrieName::patientList(const string& name) {
         
     }
     return result;
+}
+double TrieName::getRuntime() {
+    return(runtime);
 }

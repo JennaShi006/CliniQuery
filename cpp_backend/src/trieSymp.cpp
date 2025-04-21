@@ -1,6 +1,6 @@
 #include "trieSymp.h"
 #include <cctype>
-
+#include <iostream>
 
 TrieSympNode::TrieSympNode() {
     isEndOfSymp = false;
@@ -32,6 +32,7 @@ void TrieSymp::insert(const string& symptom, const string& patient) {
 }
 
 unordered_set<string> TrieSymp::search(const string& symptom) {
+    auto start = std::chrono::high_resolution_clock::now();
     TrieSympNode* node = root;
     for (char c : symptom) {
         char lower = std::tolower(c);
@@ -45,13 +46,18 @@ unordered_set<string> TrieSymp::search(const string& symptom) {
     } else {
         return unordered_set<string>();
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
 }
 
 void TrieSymp::printPatients(const string& symptom){
+   
+
     unordered_set<string> names = search(symptom);
     for(string s: names){
         cout<<s<<" | ";
     }
+   
 }
 
 vector<string> TrieSymp::listPatients(const string& symptom) {
@@ -65,4 +71,8 @@ vector<string> TrieSymp::listPatients(const string& symptom) {
 
 TrieSymp::~TrieSymp(){
     delete root;
+}
+
+double TrieSymp::getRuntime() {
+    return(runtime);
 }
