@@ -10,6 +10,7 @@
 #define CROW_USE_ASIO   // tells Crow to use standalone ASIO
 #include "crow.h"
 #include "json.hpp"
+#include <chrono>
 
 
 
@@ -93,15 +94,20 @@ int main() {
     }
 
     file.close();
-    auto search = trie.search("Michael");
-    for (const auto& [name, symptoms] : search) {
-        cout << "Patient: " << name << ", Symptoms: ";
-        for (const auto& symptom : symptoms) {
-            cout << symptom << " ";
-        }
-        cout << endl;
-    }
+    // auto search = trie.search("Michael");
+    // for (const auto& [name, symptoms] : search) {
+    //     cout << "Patient: " << name << ", Symptoms: ";
+    //     for (const auto& symptom : symptoms) {
+    //         cout << symptom << " ";
+    //     }
+    //     cout << endl;
+    // }
 
+    
+    cout << "Patients with Fever: ";
+    symp.printPatients("Fever");
+    auto runtime = symp.getRuntime();
+    cout << "runtime: " << runtime << " microseconds" << endl;
 
     crow::SimpleApp app;
 
@@ -241,24 +247,24 @@ int main() {
 
     // Test B+ Tree
     
-    vector<pair<string, string>> nameResults = nameTree.searchName("Derrick Ma");
+    // vector<pair<string, string>> nameResults = nameTree.searchName("Derrick Ma");
 
-    cout<<"Searching by name:"<<endl;
+    // cout<<"Searching by name:"<<endl;
 
-    for (int i=0; i<min(50,(int)nameResults.size()); i++) {
-        cout << "Name: " << nameResults[i].first << ", Symptoms: " << nameResults[i].second << endl;
-    }
-
-
-    vector<pair<string, string>> sympResults = symptomTree.searchSymp("0000000000001000");
-
-    cout<<endl<<"Searching by symptom:"<<endl;
-
-    for (int i=0; i<min(50,(int)sympResults.size()); i++) {
-        cout << "Name: " << sympResults[i].second << ", Symptoms: " << sympResults[i].first << endl;
-    }
+    // for (int i=0; i<min(50,(int)nameResults.size()); i++) {
+    //     cout << "Name: " << nameResults[i].first << ", Symptoms: " << nameResults[i].second << endl;
+    // }
 
 
-    return 0;
+    // vector<pair<string, string>> sympResults = symptomTree.searchSymp("0000000000001000");
+
+    // cout<<endl<<"Searching by symptom:"<<endl;
+
+    // for (int i=0; i<min(50,(int)sympResults.size()); i++) {
+    //     cout << "Name: " << sympResults[i].second << ", Symptoms: " << sympResults[i].first << endl;
+    // }
+
+
+    // return 0;
 }
 
