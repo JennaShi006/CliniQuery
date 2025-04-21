@@ -23,6 +23,8 @@ public:
 };
 
 class TrieName {
+    private:
+double runtime;
     vector<string> symptomsList = {
         "Fever", "Chest pains", "Abdominal pain", "Cough", "Fatigue", "Nausea",
         "Bleeding", "Seizures", "Dizziness", "Headaches", "Shortness of breath",
@@ -54,5 +56,6 @@ class TrieName {
         bool startsWith(const std::string& prefix);
         void printSymptoms(const string& name);
         vector<pair<string, vector<string>>> patientList(const string& name);
+        double getRuntime();
     };
 

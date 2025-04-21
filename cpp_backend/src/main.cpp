@@ -97,9 +97,14 @@ int main() {
 
     
     cout << "Patients with Fever: ";
-    symp.printPatients("Fever");
-    auto runtime = symp.getRuntime();
-    cout << "runtime: " << runtime << " microseconds" << endl;
+    symp.search("Fever");
+    auto sympruntime = symp.getRuntime();
+    cout << "symp runtime: " << sympruntime << " microseconds" << endl;
+
+    cout << "Patients with name Michael: ";
+    trie.search("Michael");
+    auto trieruntime = trie.getRuntime();
+    cout << "trie runtime: " << trieruntime << " microseconds" << endl;
 
     crow::SimpleApp app;
 
