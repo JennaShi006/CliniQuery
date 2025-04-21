@@ -217,16 +217,59 @@ int main() {
 
         // Serialize the patientList into JSON format
         crow::json::wvalue result;
-        crow::json::wvalue::list patientsJson;
+        crow::json::wvalue::object patientsJson;
 
-        for (const auto& [name, symptoms] : nameResults) {
-            crow::json::wvalue::object patientJson;
-            patientJson["name"] = name;
-            patientJson["symptoms"] = symptoms;
-            patientsJson.push_back(std::move(patientJson));
+        for (const auto& [name, fields] : nameResults) {
+            crow::json::wvalue::list patientFieldsJson;
+            for (const auto& field : fields) {
+                patientFieldsJson.push_back(field); // Add each field (e.g., symptoms) to the JSON array
+            }
+            patientsJson[name] = std::move(patientFieldsJson); // Use the name as the key
         }
-        result["results"] = std::move(patientsJson);
-        
+        result["patients"] = std::move(patientsJson);
+        res.set_header("Content-Type", "application/json");
+        res.body = result.dump(); // Serialize the JSON response
+        res.code = 200;
+        return res;
+    });
+
+
+    vector<pair<string, vector<string>>> sympResults;
+    CROW_ROUTE(app, "/api/BPlusSymp").methods("POST"_method)([&symptomTree, &sympResults](const crow::request& req) {
+        crow::response res;
+        setCORS(res);
+
+        // Parse the request body as plain text
+        std::string body = req.body;
+        std::cout << "Received body: " << body << std::endl;
+
+        // Convert the plain text body to JSON format
+        crow::json::wvalue result;
+        result["input"] = body;
+        sympResults = symptomTree.searchSymp(body);
+
+        res.code = 200;
+        res.set_header("Content-Type", "application/json");
+        res.body = result.dump(); // Serialize the JSON response
+        return std::move(res);
+    });
+
+    CROW_ROUTE(app, "/api/BPlusSympSearch")([&symptomTree, &sympResults]() {
+        crow::response res;
+        setCORS(res);
+
+        // Serialize the patientList into JSON format
+        crow::json::wvalue result;
+        crow::json::wvalue::object patientsJson;
+
+        for (const auto& [symp, fields] : sympResults) {
+            crow::json::wvalue::list patientFieldsJson;
+            for (const auto& field : fields) {
+                patientFieldsJson.push_back(field); // Add each field (e.g., symptoms) to the JSON array
+            }
+            patientsJson[symp] = std::move(patientFieldsJson); // Use the name as the key
+        }
+        result["patients"] = std::move(patientsJson);
         res.set_header("Content-Type", "application/json");
         res.body = result.dump(); // Serialize the JSON response
         res.code = 200;
