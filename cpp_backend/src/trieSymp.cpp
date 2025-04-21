@@ -54,6 +54,15 @@ void TrieSymp::printPatients(const string& symptom){
     }
 }
 
+vector<string> TrieSymp::listPatients(const string& symptom) {
+    unordered_set<string> names = search(symptom);
+    vector<string> result;
+    for (const string& name : names) {
+        result.push_back(name);
+    }
+    return result;
+}
+
 TrieSymp::~TrieSymp(){
     delete root;
 }

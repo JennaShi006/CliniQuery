@@ -16,7 +16,8 @@ public:
     bool isEndOfWord = false;
     string name; // Store the word at the end of the node
     unordered_set<string> symptoms;
-
+    unordered_map<string, unordered_set<string>> lastNameToSymptoms;
+    
     TrieNode() = default;
     ~TrieNode() = default;
 };
@@ -48,10 +49,10 @@ class TrieName {
     
         void insert(const string& name, const string& symptoms);
     
-        unordered_set<string> search(const std::string& name);
+        unordered_map<string, unordered_set<string>> search(const std::string& name);
     
         bool startsWith(const std::string& prefix);
         void printSymptoms(const string& name);
-        vector<vector<string>> patientList(const string& name);
+        vector<pair<string, vector<string>>> patientList(const string& name);
     };
 

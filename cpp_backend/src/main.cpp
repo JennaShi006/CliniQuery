@@ -4,6 +4,8 @@
 #include "bplus.h"
 #include "trieName.h"
 #include "trieSymp.h"
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #define CROW_USE_ASIO   // tells Crow to use standalone ASIO
 #include "crow.h"
@@ -91,18 +93,17 @@ int main() {
     }
 
     file.close();
+    auto search = trie.search("Michael");
+    for (const auto& [name, symptoms] : search) {
+        cout << "Patient: " << name << ", Symptoms: ";
+        for (const auto& symptom : symptoms) {
+            cout << symptom << " ";
+        }
+        cout << endl;
+    }
+
 
     crow::SimpleApp app;
-
-    // CROW_ROUTE(app, "/<path>")
-    // .methods(crow::HTTPMethod::OPTIONS)
-    // ([](const crow::request&, crow::response& res, std::string /*path*/) {
-    //     res.code = 204;
-    //     res.set_header("Access-Control-Allow-Origin", "*");
-    //     res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-    //     res.set_header("Access-Control-Allow-Headers", "Content-Type");
-    //     return move(res);
-    // });
 
     CROW_ROUTE(app, "/api/data").methods("OPTIONS"_method)([] {
         crow::response res;
@@ -116,8 +117,8 @@ int main() {
         return res;
     });
 
-    vector<vector<string>> patientList;
-    CROW_ROUTE(app, "/api/data").methods("POST"_method)([&trie, &patientList](const crow::request& req) {
+    vector<pair<string, vector<string>>> patientList;
+    CROW_ROUTE(app, "/api/trieName").methods("POST"_method)([&trie, &patientList](const crow::request& req) {
         crow::response res;
         res.set_header("Access-Control-Allow-Origin", "*");
         res.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
@@ -146,13 +147,53 @@ int main() {
 
         // Serialize the patientList into JSON format
         crow::json::wvalue result;
-        crow::json::wvalue::list patientsJson;
-        for (const auto& patient : patientList) {
-            crow::json::wvalue::list patientJson;
-            for (const auto& field : patient) {
-                patientJson.push_back(field);
+        crow::json::wvalue::object patientsJson;
+
+        for (const auto& [name, fields] : patientList) {
+            crow::json::wvalue::list patientFieldsJson;
+            for (const auto& field : fields) {
+                patientFieldsJson.push_back(field); // Add each field (e.g., symptoms) to the JSON array
             }
-            patientsJson.push_back(std::move(patientJson));
+            patientsJson[name] = std::move(patientFieldsJson); // Use the name as the key
+        }
+        result["patients"] = std::move(patientsJson);
+        
+        res.set_header("Content-Type", "application/json");
+        res.body = result.dump(); // Serialize the JSON response
+        res.code = 200;
+        return res;
+    });
+
+    vector<string> patientNames;
+    CROW_ROUTE(app, "/api/trieSymp").methods("POST"_method)([&symp, &patientNames](const crow::request& req) {
+        crow::response res;
+        setCORS(res);
+
+        // Parse the request body as plain text
+        std::string body = req.body;
+        std::cout << "Received body: " << body << std::endl;
+
+        // Convert the plain text body to JSON format
+        crow::json::wvalue result;
+        result["input"] = body;
+        patientNames = symp.listPatients(body);
+
+        res.code = 200;
+        res.set_header("Content-Type", "application/json");
+        res.body = result.dump(); // Serialize the JSON response
+        return std::move(res);
+    });
+
+    CROW_ROUTE(app, "/api/trieSympSearch")([&symp, &patientNames]() {
+        crow::response res;
+        setCORS(res);
+
+        // Serialize the patientList into JSON format
+        crow::json::wvalue result;
+        crow::json::wvalue::list patientsJson;
+        for (const auto& patient : patientNames) {
+    
+            patientsJson.push_back(std::move(patient));
         }
         result["patients"] = std::move(patientsJson);
         

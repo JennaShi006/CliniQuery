@@ -11,6 +11,7 @@ void TrieName::insert(const std::string& name, const std::string& symptoms) {
     size_t spacePos = normalizedName.find(' ');
     if (spacePos != std::string::npos) {
         std::string firstName = normalizedName.substr(0, spacePos);
+        std::string lastName = normalizedName.substr(spacePos + 1);
         for (char c : firstName) {
             if (current->children.find(c) == current->children.end()) {
                 current->children[c] = new TrieNode();
@@ -20,7 +21,7 @@ void TrieName::insert(const std::string& name, const std::string& symptoms) {
         current->isEndOfWord = true; // Mark the end of the first name
         current->name = firstName;
         current->symptoms.insert(symptoms);
-
+        current->lastNameToSymptoms[lastName].insert(symptoms);
         // Reset current to root for inserting the full name
         current = root;
     }
@@ -37,20 +38,48 @@ void TrieName::insert(const std::string& name, const std::string& symptoms) {
     current->symptoms.insert(symptoms);
 }
 
-unordered_set<string> TrieName::search(const std::string& name) {
+unordered_map<string, unordered_set<string>> TrieName::search(const std::string& name) {
     // Normalize the input: convert to lowercase
+    unordered_map<string, unordered_set<string>> result;
     std::string normalizedWord = name;
     std::transform(normalizedWord.begin(), normalizedWord.end(), normalizedWord.begin(), ::tolower);
-
-    TrieNode* current = root;
-    for (char c : normalizedWord) {
-        if (current->children.find(c) == current->children.end()) {
-            // If the character is not present, return false
-            return {};
+    size_t spacePos = normalizedWord.find(' ');
+    if (spacePos == std::string::npos) {
+        TrieNode* current = root;
+        // If no space is found
+        for (char c : normalizedWord) {
+            if (root->children.find(c) == root->children.end()) {
+                // If the character is not present, return an empty map
+                return {};
+            }
+            current = current->children[c];
         }
-        current = current->children[c];
+        if (current->isEndOfWord) {
+            // If the word is found, return the symptoms
+            for (const auto& [lastName, symptoms] : current->lastNameToSymptoms) {
+                result[lastName] = symptoms;
+            }
+        }
     }
-    return current->symptoms; // Return the symptoms associated with the name
+    else{
+        TrieNode* current = root;
+        for (char c : normalizedWord) {
+            if (current->children.find(c) == current->children.end()) {
+                // If the character is not present, return an empty map
+                return {};
+            }
+            current = current->children[c];
+        }
+        if (current->isEndOfWord) {
+            // If the word is found, return the symptoms
+
+            std::string lastName = normalizedWord.substr(spacePos + 1);
+            result[lastName] = current->symptoms;
+        }
+    }
+    
+
+    return result;
 }
 
 bool TrieName::startsWith(const std::string& prefix) {
@@ -73,47 +102,59 @@ void TrieName::printSymptoms(const string& name) {
     // Normalize the input: convert to lowercase
     std::string normalizedName = name;
     std::transform(normalizedName.begin(), normalizedName.end(), normalizedName.begin(), ::tolower);
-
-    unordered_set<string> symptoms = search(normalizedName);
+    size_t spacePos = normalizedName.find(' ');
+    if (spacePos != std::string::npos) {
+        std::string firstName = normalizedName.substr(0, spacePos);
+        std::string lastName = normalizedName.substr(spacePos + 1);
+        normalizedName = firstName + " " + lastName;
+    }
+    unordered_map<string, unordered_set<string>> symptoms = search(normalizedName);
     if (symptoms.empty()) {
         std::cout << "No symptoms found for the name: " << name << std::endl;
         return;
     }
 
-    for (const auto& symptom : symptoms) {
-        std::cout << "Patient: " << name << ", Symptoms: ";
+    for (const auto& [lastname, symptom] : symptoms) {
+        std::cout << "Patient: " << name << " (" << lastname <<", Symptoms: \n";
         //symptom << std::endl;
-        for (int i=0; i<symptom.length(); i++){
-            if(symptom[i] == '1'){
-                std::cout << symptomsList[i] << " | ";
+        if (!symptom.empty()) {
+            const string& symptomBinary = *symptom.begin();  // Grab the first (or only) symptom string
+            for (size_t i = 0; i < symptomBinary.size(); ++i) {
+                if (symptomBinary[i] == '1' && i < symptomsList.size()) {
+                    cout << " - " << symptomsList[i] << "\n";
+                }
             }
-            
         }
-        std::cout << std::endl;
+        
     }
 }
 
-vector<vector<string>> TrieName::patientList(const string& name) {
+vector<pair<string, vector<string>>> TrieName::patientList(const string& name) {
     // Normalize the input: convert to lowercase
     std::string normalizedName = name;
     std::transform(normalizedName.begin(), normalizedName.end(), normalizedName.begin(), ::tolower);
 
-    unordered_set<string> symptoms = search(normalizedName);
-    vector<vector<string>> result;
+    unordered_map<string, unordered_set<string>> symptoms = search(normalizedName);
+    vector<pair<string, vector<string>>> result;
     if (symptoms.empty()) {
         std::cout << "No symptoms found for the name: " << name << std::endl;
         return result;
     }
 
-    for (const auto& symptom : symptoms) {
-        vector<string> patientData;
-        for (int i=0; i<symptom.length(); i++){
-            if(symptom[i] == '1'){
-                patientData.push_back(symptomsList[i]);
+    for (const auto& [lastname, symptom] : symptoms) {
+        vector<string> symps;
+        if (!symptom.empty()) {
+            const string& symptomBinary = *symptom.begin();  // Grab the first (or only) symptom string
+            for (size_t i = 0; i < symptomBinary.size(); ++i) {
+                if (symptomBinary[i] == '1' && i < symptomsList.size()) {
+                    symps.push_back(symptomsList[i]);
+                }
             }
             
         }
-        result.push_back(patientData);
+        result.push_back({lastname, symps});
+        
+        
     }
     return result;
 }

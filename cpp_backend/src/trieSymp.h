@@ -28,6 +28,7 @@ public:
     void insert(const string& symptom, const string& patient);
     unordered_set<string> search(const string& symptom);
     void printPatients(const string& symptom);
+    vector<string> listPatients(const string& symptom);
     ~TrieSymp();
 };
 

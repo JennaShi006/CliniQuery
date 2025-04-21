@@ -43,9 +43,9 @@ const InputBar = ({ onSubmit }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (inputType === 'text') {
-            onSubmit({ type: 'text', value: textValue });
+            onSubmit({ type: 'name', value: textValue });
         } else if (inputType === 'select') {
-            onSubmit({ type: 'select', value: selectedOption });
+            onSubmit({ type: 'symptom', value: selectedOption });
         }
     };
 
