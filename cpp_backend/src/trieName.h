@@ -24,7 +24,7 @@ public:
 
 class TrieName {
     private:
-double runtime;
+    double runtime;
     vector<string> symptomsList = {
         "Fever", "Chest pains", "Abdominal pain", "Cough", "Fatigue", "Nausea",
         "Bleeding", "Seizures", "Dizziness", "Headaches", "Shortness of breath",
