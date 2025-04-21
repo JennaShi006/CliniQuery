@@ -104,10 +104,10 @@ class BPlus{
 
 
     // Search for a name and return the closest results' key-value pairs
-    vector<pair<string,string>> searchName(const string& key);
+    vector<pair<string,vector<string>>> searchName(const string& key);
 
     // Search for a symptom and return the closest results' key-value pairs
-    vector<pair<string,string>> searchSymp(const string& key);
+    vector<pair<string,vector<string>>> searchSymp(const string& key);
 
 };
 
