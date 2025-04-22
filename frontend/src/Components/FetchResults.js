@@ -83,7 +83,7 @@ const FetchResults = ({ searchType, searchMethod }) => {
                     </li>
                 ))}
             </ul>
-            <div>
+            <div className = 'pagination'>
                 <button onClick={handlePreviousPage} disabled={currentPage === 1}>
                     Previous
                 </button>

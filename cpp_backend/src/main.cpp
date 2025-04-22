@@ -377,48 +377,6 @@ int main() {
 
     cout<<"server shutdown"<<endl;
 
-    
-    
-
-    //test the trie;
-    // trie.printSymptoms("Michael");
-    // symp.printPatients("fever");
-
-
-    // // Test the trie
-    // cout << "Searching for 'Josh Miles': " << (trie.search("Josh Miles") ? "Found" : "Not Found") << endl;
-    // cout << "Searching for 'Jenna Shi': " << (trie.search("Jenna Shi") ? "Found" : "Not Found") << endl;
-
-
-
-    // Test B+ Tree
-    
-    // vector<pair<string, vector<string>>> nameResults = nameTree.searchName("Jenna");
-
-    // cout<<"Searching by name:"<<endl;
-
-    // for (int i=0; i<min(50,(int)nameResults.size()); i++) {
-    //     cout << "Name: " << nameResults[i].first << ", Symptoms: ";
-    //     for (int j=0; j<nameResults[i].second.size(); j++) {
-    //         cout<<nameResults[i].second[j]<<" | ";
-    //     }
-    //     cout << endl;
-    // }
-
-
-    // vector<pair<string, vector<string>>> sympResults = symptomTree.searchSymp("shortness of breath");
-
-    // cout<<endl<<"Searching by symptom:"<<endl;
-
-    // for (int i=0; i<min(50,(int)sympResults.size()); i++) {
-    //     cout << "Name: " << sympResults[i].first << ", Symptoms: ";
-    //     for (int j=0; j<sympResults[i].second.size(); j++) {
-    //         cout<<sympResults[i].second[j]<<" | ";
-    //     }
-    //     cout << endl;
-    // }
-
-
-    // return 0;
+    return 0;
 }
 

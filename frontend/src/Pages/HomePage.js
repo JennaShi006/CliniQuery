@@ -43,8 +43,6 @@ export const HomePage = () => {
 
     return (
         <div>
-            <h1>Welcome to CliniQuery</h1>
-            <p>This is the main content of the home page.</p>
             <InputBar onSubmit={handleInputSubmit} />
             {dataSubmitted && (
                 <>
@@ -52,8 +50,9 @@ export const HomePage = () => {
                         Showing Search Results for: {input} (
                         {searchType === "name" ? "Name Search" : "Symptom Search"} using {searchMethod === "trie" ? "Trie" : "B+ Tree"})
                     </h2>
-                    <FetchResults searchType={searchType} searchMethod={searchMethod} />
                     <FetchTime searchType={searchType} searchMethod={searchMethod} />
+                    <FetchResults searchType={searchType} searchMethod={searchMethod} />
+                    
                 </>
             )}
         </div>

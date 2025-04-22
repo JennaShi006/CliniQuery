@@ -88,22 +88,6 @@ unordered_map<string, unordered_set<string>> TrieName::search(const std::string&
     return result;
 }
 
-bool TrieName::startsWith(const std::string& prefix) {
-    // Normalize the input: convert to lowercase
-    std::string normalizedPrefix = prefix;
-    std::transform(normalizedPrefix.begin(), normalizedPrefix.end(), normalizedPrefix.begin(), ::tolower);
-    
-    TrieNode* current = root;
-    for (char c : prefix) {
-        if (current->children.find(c) == current->children.end()) {
-            // If the character is not present, return false
-            return false;
-        }
-        current = current->children[c];
-    }
-    return true;
-}
-
 void TrieName::printSymptoms(const string& name) {
     // Normalize the input: convert to lowercase
     
