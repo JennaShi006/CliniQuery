@@ -171,9 +171,10 @@ int main() {
         crow::response res;
         //set CORS headers
         setCORS(res);
-
+        crow::json::wvalue result;
+        result["time"] = std::to_string(trieNameRuntime);
         //res.body is the data to be sent back to the front end
-        res.body = std::to_string(trieNameRuntime);
+        res.body = result.dump(); // Serialize the JSON response
         res.set_header("Content-Type", "application/json");
         res.code = 200;
         return res;
@@ -181,6 +182,7 @@ int main() {
 
 
     vector<string> patientNames;
+    double trieSympRuntime;
     CROW_ROUTE(app, "/api/trieSymp").methods("POST"_method)([&symp, &patientNames](const crow::request& req) {
         crow::response res;
         setCORS(res);
@@ -219,7 +221,21 @@ int main() {
         return res;
     });
 
+    CROW_ROUTE(app, "/api/trieSympTime")([&trieSympRuntime](){
+        crow::response res;
+        //set CORS headers
+        setCORS(res);
+        crow::json::wvalue result;
+        result["time"] = std::to_string(trieSympRuntime);
+        //res.body is the data to be sent back to the front end
+        res.body = result.dump(); // Serialize the JSON response
+        res.set_header("Content-Type", "application/json");
+        res.code = 200;
+        return res;
+    });
+
     vector<pair<string, vector<string>>> nameResults;
+    double nameTreeRuntime;
     CROW_ROUTE(app, "/api/BPlusName").methods("POST"_method)([&nameTree, &nameResults](const crow::request& req) {
         crow::response res;
         setCORS(res);
@@ -243,7 +259,7 @@ int main() {
         crow::response res;
         setCORS(res);
 
-        // Serialize the patientList into JSON format
+        // Serialize the nameResults into JSON format
         crow::json::wvalue result;
         crow::json::wvalue::object patientsJson;
 
@@ -261,8 +277,22 @@ int main() {
         return res;
     });
 
+    CROW_ROUTE(app, "/api/BPlusNameTime")([&nameTreeRuntime](){
+        crow::response res;
+        //set CORS headers
+        setCORS(res);
+        crow::json::wvalue result;
+        result["time"] = std::to_string(nameTreeRuntime);
+        //res.body is the data to be sent back to the front end
+        res.body = result.dump(); // Serialize the JSON response
+        res.set_header("Content-Type", "application/json");
+        res.code = 200;
+        return res;
+    });
+
 
     vector<pair<string, vector<string>>> sympResults;
+    double sympTreeRuntime;
     CROW_ROUTE(app, "/api/BPlusSymp").methods("POST"_method)([&symptomTree, &sympResults](const crow::request& req) {
         crow::response res;
         setCORS(res);
@@ -300,6 +330,19 @@ int main() {
         result["patients"] = std::move(patientsJson);
         res.set_header("Content-Type", "application/json");
         res.body = result.dump(); // Serialize the JSON response
+        res.code = 200;
+        return res;
+    });
+
+    CROW_ROUTE(app, "/api/BPlusSympTime")([&sympTreeRuntime](){
+        crow::response res;
+        //set CORS headers
+        setCORS(res);
+        crow::json::wvalue result;
+        result["time"] = std::to_string(sympTreeRuntime);
+        //res.body is the data to be sent back to the front end
+        res.body = result.dump(); // Serialize the JSON response
+        res.set_header("Content-Type", "application/json");
         res.code = 200;
         return res;
     });

@@ -42,7 +42,7 @@ const FetchTime = ({ searchType, searchMethod }) => {
         return <div>Loading...</div>; // Show loading state while fetching time
     }
 
-    if (!time) {
+    if (time == null) {
         return <div>Error loading time</div>;
     }
 
