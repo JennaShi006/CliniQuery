@@ -42,12 +42,15 @@ unordered_set<string> TrieSymp::search(const string& symptom) {
         node = node->children[lower];
     }
     if (node->isEndOfSymp) {
+        auto end = std::chrono::high_resolution_clock::now();
+        runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
         return node->names;
     } else {
+        auto end = std::chrono::high_resolution_clock::now();
+        runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
         return unordered_set<string>();
     }
-    auto end = std::chrono::high_resolution_clock::now();
-    runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
+    
 }
 
 void TrieSymp::printPatients(const string& symptom){

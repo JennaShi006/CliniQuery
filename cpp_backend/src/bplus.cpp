@@ -294,9 +294,10 @@ vector<pair<string,vector<string>>> BPlus::searchName(const string& key) {
             }
         }
     }
-    return results;
     auto end = std::chrono::high_resolution_clock::now();
     nameRuntime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
+    return results;
+    
 }
 
 // Search for a symptom and return the closest results' key-value pairs
@@ -397,7 +398,8 @@ vector<pair<string,vector<string>>> BPlus::searchSymp(const string& key) {
 
         }
     }
-    return results;
     auto end = std::chrono::high_resolution_clock::now();
     sympRuntime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
+    return results;
+   
 }
