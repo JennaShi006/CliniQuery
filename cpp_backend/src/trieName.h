@@ -52,10 +52,8 @@ class TrieName {
         void insert(const string& name, const string& symptoms);
     
         unordered_map<string, unordered_set<string>> search(const std::string& name);
-    
-        bool startsWith(const std::string& prefix);
-        void printSymptoms(const string& name);
         vector<pair<string, vector<string>>> patientList(const string& name);
+        
         double getRuntime();
     };
 

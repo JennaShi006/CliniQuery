@@ -88,38 +88,6 @@ unordered_map<string, unordered_set<string>> TrieName::search(const std::string&
     return result;
 }
 
-void TrieName::printSymptoms(const string& name) {
-    // Normalize the input: convert to lowercase
-    
-    std::string normalizedName = name;
-    std::transform(normalizedName.begin(), normalizedName.end(), normalizedName.begin(), ::tolower);
-    size_t spacePos = normalizedName.find(' ');
-    if (spacePos != std::string::npos) {
-        std::string firstName = normalizedName.substr(0, spacePos);
-        std::string lastName = normalizedName.substr(spacePos + 1);
-        normalizedName = firstName + " " + lastName;
-    }
-    unordered_map<string, unordered_set<string>> symptoms = search(normalizedName);
-    if (symptoms.empty()) {
-        std::cout << "No symptoms found for the name: " << name << std::endl;
-        return;
-    }
-
-    for (const auto& [lastname, symptom] : symptoms) {
-        std::cout << "Patient: " << name << " (" << lastname <<", Symptoms: \n";
-        //symptom << std::endl;
-        if (!symptom.empty()) {
-            const string& symptomBinary = *symptom.begin();  // Grab the first (or only) symptom string
-            for (size_t i = 0; i < symptomBinary.size(); ++i) {
-                if (symptomBinary[i] == '1' && i < symptomsList.size()) {
-                    cout << " - " << symptomsList[i] << "\n";
-                }
-            }
-        }
-        
-    }
-}
-
 vector<pair<string, vector<string>>> TrieName::patientList(const string& name) {
     // Normalize the input: convert to lowercase
     std::string normalizedName = name;
