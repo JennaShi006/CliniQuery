@@ -183,7 +183,7 @@ int main() {
 
     vector<string> patientNames;
     double trieSympRuntime;
-    CROW_ROUTE(app, "/api/trieSymp").methods("POST"_method)([&symp, &patientNames](const crow::request& req) {
+    CROW_ROUTE(app, "/api/trieSymp").methods("POST"_method)([&symp, &patientNames, &trieSympRuntime](const crow::request& req) {
         crow::response res;
         setCORS(res);
 
@@ -195,6 +195,7 @@ int main() {
         crow::json::wvalue result;
         result["input"] = body;
         patientNames = symp.listPatients(body);
+        trieSympRuntime = symp.getRuntime();
 
         res.code = 200;
         res.set_header("Content-Type", "application/json");
@@ -236,7 +237,7 @@ int main() {
 
     vector<pair<string, vector<string>>> nameResults;
     double nameTreeRuntime;
-    CROW_ROUTE(app, "/api/BPlusName").methods("POST"_method)([&nameTree, &nameResults](const crow::request& req) {
+    CROW_ROUTE(app, "/api/BPlusName").methods("POST"_method)([&nameTree, &nameResults, &nameTreeRuntime](const crow::request& req) {
         crow::response res;
         setCORS(res);
 
@@ -248,6 +249,7 @@ int main() {
         crow::json::wvalue result;
         result["input"] = body;
         nameResults = nameTree.searchName(body);
+        nameTreeRuntime = nameTree.getNameRuntime();
 
         res.code = 200;
         res.set_header("Content-Type", "application/json");
@@ -293,7 +295,7 @@ int main() {
 
     vector<pair<string, vector<string>>> sympResults;
     double sympTreeRuntime;
-    CROW_ROUTE(app, "/api/BPlusSymp").methods("POST"_method)([&symptomTree, &sympResults](const crow::request& req) {
+    CROW_ROUTE(app, "/api/BPlusSymp").methods("POST"_method)([&symptomTree, &sympResults, &sympTreeRuntime](const crow::request& req) {
         crow::response res;
         setCORS(res);
 
@@ -305,6 +307,8 @@ int main() {
         crow::json::wvalue result;
         result["input"] = body;
         sympResults = symptomTree.searchSymp(body);
+        sympTreeRuntime = symptomTree.getSympRuntime();
+        cout << "sympTree runtime: " << sympTreeRuntime << " microseconds" << endl;
 
         res.code = 200;
         res.set_header("Content-Type", "application/json");
