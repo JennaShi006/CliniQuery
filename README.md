@@ -14,6 +14,7 @@
 # to run
 ### open 2 terminals, cd into frontend and cpp_backend
 ### to start frontend, run npm install to install dependencies, and then run : npm start
+### if you don't have nodejs installed, you might need to install it and set it in your path variables 
 ### for backend, build your own build files with cmake -S . -B build -G "MinGW Makefiles"
 ### then, cd into cpp_backend/build and run : cmake --build .
 ### then, run ./CliniQuery to start the backend.
