@@ -121,7 +121,8 @@ int main() {
     });
 
     vector<pair<string, vector<string>>> patientList;
-    CROW_ROUTE(app, "/api/trieName").methods("POST"_method)([&trie, &patientList](const crow::request& req) {
+    double trieNameRuntime = 5.0;
+    CROW_ROUTE(app, "/api/trieName").methods("POST"_method)([&trie, &patientList, &trieNameRuntime](const crow::request& req) {
         crow::response res;
         setCORS(res);
 
@@ -133,6 +134,8 @@ int main() {
         crow::json::wvalue result;
         result["input"] = body;
         patientList = trie.patientList(body);
+        trieNameRuntime = trie.getRuntime();
+        cout << "trieName runtime: " << trieNameRuntime << " microseconds" << endl;
 
         res.code = 200;
         res.set_header("Content-Type", "application/json");
@@ -162,6 +165,19 @@ int main() {
         res.code = 200;
         return res;
     });
+
+    CROW_ROUTE(app, "/api/trieNameTime")([&trieNameRuntime](){
+        crow::response res;
+        //set CORS headers
+        setCORS(res);
+
+        //res.body is the data to be sent back to the front end
+        res.body = std::to_string(trieNameRuntime);
+        res.set_header("Content-Type", "application/json");
+        res.code = 200;
+        return res;
+    });
+
 
     vector<string> patientNames;
     CROW_ROUTE(app, "/api/trieSymp").methods("POST"_method)([&symp, &patientNames](const crow::request& req) {

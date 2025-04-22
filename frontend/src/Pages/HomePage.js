@@ -1,5 +1,6 @@
 import InputBar from "../Components/InputBar";
 import FetchResults from "../Components/FetchResults";
+import FetchTime from "../Components/FetchTime";
 import React, { useState } from 'react';
 
 export const HomePage = () => {
@@ -52,6 +53,7 @@ export const HomePage = () => {
                         {searchType === "name" ? "Name Search" : "Symptom Search"} using {searchMethod === "trie" ? "Trie" : "B+ Tree"})
                     </h2>
                     <FetchResults searchType={searchType} searchMethod={searchMethod} />
+                    <FetchTime searchType={searchType} searchMethod={searchMethod} />
                 </>
             )}
         </div>

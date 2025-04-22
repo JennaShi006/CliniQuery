@@ -51,6 +51,8 @@ unordered_map<string, unordered_set<string>> TrieName::search(const std::string&
         for (char c : normalizedWord) {
             if (root->children.find(c) == root->children.end()) {
                 // If the character is not present, return an empty map
+                auto end = std::chrono::high_resolution_clock::now();
+                runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
                 return {};
             }
             current = current->children[c];
@@ -67,6 +69,8 @@ unordered_map<string, unordered_set<string>> TrieName::search(const std::string&
         for (char c : normalizedWord) {
             if (current->children.find(c) == current->children.end()) {
                 // If the character is not present, return an empty map
+                auto end = std::chrono::high_resolution_clock::now();
+                runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
                 return {};
             }
             current = current->children[c];
@@ -79,9 +83,9 @@ unordered_map<string, unordered_set<string>> TrieName::search(const std::string&
         }
     }
     
-    return result;
     auto end = std::chrono::high_resolution_clock::now();
     runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
+    return result;
 }
 
 bool TrieName::startsWith(const std::string& prefix) {
