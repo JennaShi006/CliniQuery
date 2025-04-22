@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <set>
 #define CROW_USE_ASIO   // tells Crow to use standalone ASIO
 #include "crow.h"
 #include "json.hpp"
