@@ -265,7 +265,9 @@ int main() {
         crow::json::wvalue result;
         crow::json::wvalue::object patientsJson;
 
-        for (const auto& [name, fields] : nameResults) {
+        for (int i=nameResults.size()-1; i>=0; i--) {
+            string name = nameResults[i].first;
+            vector<string> fields = nameResults[i].second;
             crow::json::wvalue::list patientFieldsJson;
             for (const auto& field : fields) {
                 patientFieldsJson.push_back(field); // Add each field (e.g., symptoms) to the JSON array
@@ -324,7 +326,9 @@ int main() {
         crow::json::wvalue result;
         crow::json::wvalue::object patientsJson;
 
-        for (const auto& [symp, fields] : sympResults) {
+        for (int i=sympResults.size()-1; i>=0; i--) {
+            string symp = sympResults[i].first;
+            vector<string> fields = sympResults[i].second;
             crow::json::wvalue::list patientFieldsJson;
             for (const auto& field : fields) {
                 patientFieldsJson.push_back(field); // Add each field (e.g., symptoms) to the JSON array

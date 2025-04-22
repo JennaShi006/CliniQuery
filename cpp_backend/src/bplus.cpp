@@ -267,29 +267,27 @@ vector<pair<string,vector<string>>> BPlus::searchName(const string& key) {
         while (rightLeaf != nullptr){
 
             // Try adding from the right
-            if (rightLeaf != nullptr) {
-                if (right < rightLeaf->keyCount) {
-                    // Break if different first name
-                    if (rightLeaf->keys[right].substr(0, key.size())==key) {
-                        break;
+            if (right < rightLeaf->keyCount) {
+                // Break if different first name
+                if (rightLeaf->keys[right].substr(0, key.size())!=key) {
+                    break;
+                }
+                // Valid index in current rightLeaf
+                // Make a vector containing the symptoms written out
+                vector<string> symps;
+                for (int i=0; i<16; i++) {
+                    if (rightLeaf->values[right].substr(i, 1) == "1") {
+                        symps.push_back(symptoms[i]);
                     }
-                    // Valid index in current rightLeaf
-                    // Make a vector containing the symptoms written out
-                    vector<string> symps;
-                    for (int i=0; i<16; i++) {
-                        if (rightLeaf->values[right].substr(i, 1) == "1") {
-                            symps.push_back(symptoms[i]);
-                        }
-                    }
-                    results.push_back({rightLeaf->keys[right], symps});
-                    right++;
-                } else {
-                    // Index is out of bounds, move to the next leaf
-                    rightLeaf = rightLeaf->next;
-                    if (rightLeaf != nullptr) {
-                        // Reset index to the start of the new next leaf
-                        right = 0;
-                    }
+                }
+                results.push_back({rightLeaf->keys[right], symps});
+                right++;
+            } else {
+                // Index is out of bounds, move to the next leaf
+                rightLeaf = rightLeaf->next;
+                if (rightLeaf != nullptr) {
+                    // Reset index to the start of the new next leaf
+                    right = 0;
                 }
             }
         }
