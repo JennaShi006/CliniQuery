@@ -19,6 +19,9 @@
 ### then, cd into cpp_backend/build and run : cmake --build .
 ### then, run ./CliniQuery to start the backend.
 
+# While Running
+### Make sure to refresh the page between searches!
+
 # Troubleshooting
 ### If it is not building and it says cannot find "crow.h", try to change CMakeLists.txt from include_directories to target_include_directories.
 ### if attempting to rebuild, delete the build folder in between attempts, and ensure that the build folder and CMakeLists.txt is located inside cpp_backend.

@@ -403,3 +403,11 @@ vector<pair<string,vector<string>>> BPlus::searchSymp(const string& key) {
     return results;
    
 }
+
+// Get the runtime of the last search operation
+double BPlus::getNameRuntime() {
+    return nameRuntime;
+}
+double BPlus::getSympRuntime() {
+    return sympRuntime;
+}

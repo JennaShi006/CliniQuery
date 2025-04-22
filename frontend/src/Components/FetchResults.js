@@ -41,7 +41,7 @@ const FetchResults = ({ searchType, searchMethod }) => {
         fetchData();
     }, [searchType, searchMethod]); // Re-fetch data when searchType or searchMethod changes
 
-    const isSymptomSearch = searchType === 'symptom';
+    const isSymptomSearch = searchType === 'symptom' && searchMethod === 'trie'; // Check if the search is for symptoms using trie
     const lastNames = isSymptomSearch ? data : Object.keys(data); // Extract keys for name search or use the vector for symptom search
     const indexOfLastResult = currentPage * resultsPerPage;
     const indexOfFirstResult = indexOfLastResult - resultsPerPage;
