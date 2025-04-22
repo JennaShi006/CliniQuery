@@ -31,7 +31,7 @@ void TrieSymp::insert(const string& symptom, const string& patient) {
     node->names.insert(patient);
 }
 
-unordered_set<string> TrieSymp::search(const string& symptom) {
+set<string> TrieSymp::search(const string& symptom) {
     auto start = std::chrono::high_resolution_clock::now();
     TrieSympNode* node = root;
     for (char c : symptom) {
@@ -42,18 +42,21 @@ unordered_set<string> TrieSymp::search(const string& symptom) {
         node = node->children[lower];
     }
     if (node->isEndOfSymp) {
+        auto end = std::chrono::high_resolution_clock::now();
+        runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
         return node->names;
     } else {
-        return unordered_set<string>();
+        auto end = std::chrono::high_resolution_clock::now();
+        runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
+        return set<string>();
     }
-    auto end = std::chrono::high_resolution_clock::now();
-    runtime =  static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
+    
 }
 
 void TrieSymp::printPatients(const string& symptom){
    
 
-    unordered_set<string> names = search(symptom);
+    set<string> names = search(symptom);
     for(string s: names){
         cout<<s<<" | ";
     }
@@ -61,7 +64,7 @@ void TrieSymp::printPatients(const string& symptom){
 }
 
 vector<string> TrieSymp::listPatients(const string& symptom) {
-    unordered_set<string> names = search(symptom);
+    set<string> names = search(symptom);
     vector<string> result;
     for (const string& name : names) {
         result.push_back(name);
