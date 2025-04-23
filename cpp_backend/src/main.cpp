@@ -35,9 +35,11 @@ void insertData(TrieName& trieName, TrieSymp& symp, const auto& line) {
     while (getline(ss, symptomData, ',')) {
         symptomsBinary += symptomData;
         if(symptomData == "1"){
-        symp.insert(symptoms[sympTrack], fullName);
+           // cout<<"symptom: "<<symptoms[sympTrack]<<endl;
+            symp.insert(symptoms[sympTrack], fullName);
         }
         sympTrack++;
+       // cout<<"symptomTrack: "<<sympTrack<<endl;
     }
 
     // Insert the full name and symptoms into the trie
@@ -77,7 +79,14 @@ int main() {
     
     BPlus nameTree;
     BPlus symptomTree;
-
+    vector<string> symptoms = {
+        "Fever", "Chest pains", "Abdominal pain", "Cough", "Fatigue", "Nausea", 
+        "Bleeding", "Seizures", "Dizziness", "Headaches", "Shortness of breath", 
+        "Memory loss", "Swelling", "Diarrhea", "Constipation", "Joint pain"
+    };
+    for(int i = 0; i < symptoms.size(); i++) {
+    symp.insertSymptom(symptoms[i]);
+    }
     // Open the CSV file
     ifstream file("../data_gen/CliniQuery_Data.csv");
     if (!file.is_open()) {
@@ -95,6 +104,9 @@ int main() {
     }
 
     file.close();
+    
+   
+    //symp.printPatients("joint pain");
 
 
 
