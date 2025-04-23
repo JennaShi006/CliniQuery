@@ -33,5 +33,6 @@ public:
     vector<string> listPatients(const string& symptom);
     ~TrieSymp();
     double getRuntime();
+    void insertSymptom(const string& symptom);
 };
 

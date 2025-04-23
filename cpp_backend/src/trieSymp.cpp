@@ -16,9 +16,7 @@ TrieSympNode::~TrieSympNode() {
 TrieSymp::TrieSymp() {
     root = new TrieSympNode();
 }
-
-
-void TrieSymp::insert(const string& symptom, const string& patient) {
+void TrieSymp::insertSymptom(const string& symptom) {
     TrieSympNode* node = root;
     for (char c : symptom) {
         char lower = std::tolower(c);
@@ -27,8 +25,23 @@ void TrieSymp::insert(const string& symptom, const string& patient) {
         }
         node = node->children[lower];
     }
-    node->isEndOfSymp = true;
-    node->names.insert(patient);
+    node->isEndOfSymp = true; // mark it as a valid symptom
+}
+
+void TrieSymp::insert(const string& symptom, const string& patient) {
+    TrieSympNode* node = root;
+    for (char c : symptom) {
+        char lower = std::tolower(c);
+        if (node->children.find(lower) == node->children.end()) {
+
+            return;
+        }
+        node = node->children[lower];
+    }
+
+    if (node->isEndOfSymp) {
+        node->names.insert(patient);
+    }
 }
 
 set<string> TrieSymp::search(const string& symptom) {
